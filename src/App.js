@@ -1,25 +1,26 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import ReactGA from 'react-ga4';
+import Home from "pages/Home"
+import About from "pages/About"
+import Contact from "pages/Contact"
+
+ReactGA.initialize("G-XXXXXXX"); // Replace with your Google Analytics Measurement ID
 
 function App() {
+  useEffect(() => {
+    ReactGA.send("pageview");
+  }, []);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className='font-sans text-gray-800'>
+      <Home />
+      <About />
+      <Contact />
     </div>
   );
 }
+// This is the main entry point of the application
+// It initializes Google Analytics and sets up the main layout of the app
+
 
 export default App;
