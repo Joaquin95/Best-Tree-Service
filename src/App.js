@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import ReactGA from 'react-ga4';
-import Home from "pages/Home"
-import About from "pages/About"
-import Contact from "pages/Contact"
+import Home from "./pages/Home";
+import About from "./pages/About";
+import Contact from "./pages/Contact";
 
 ReactGA.initialize("G-XXXXXXX"); // Replace with your Google Analytics Measurement ID
 
