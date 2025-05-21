@@ -25,7 +25,13 @@ export default function Home() {
       </section>
 
       {/* Contact us Section vv*/}
-
+        <section className="contact-section">
+          <h2>Contact us</h2>
+          <p> For inquiries or to schedule a service, please contact us at:</p>
+          <p>Phone: (214)518-1437</p>
+          <p>Email: Mintinvestments95@gmail.com</p>
+          <p>Location: Dallas, TX</p>
+        </section>
     </main>
   );
 }
