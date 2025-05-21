@@ -28,8 +28,8 @@ export default function Home() {
         <section className="contact-section">
           <h2>Contact us</h2>
           <p> For inquiries or to schedule a service, please contact us at:</p>
-          <p>Phone: (214)518-1437</p>
-          <p>Email: Mintinvestments95@gmail.com</p>
+          <p>Phone: <a href="tel:2145181437">(214)518-1437  </a> </p>
+          <p>Email: <a href="mailto:Mintinvestments95@gmail.com">Mintinvestments95@gmail.com </a> </p>
           <p>Location: Dallas, TX</p>
         </section>
     </main>
