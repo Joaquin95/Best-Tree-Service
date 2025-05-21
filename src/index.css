@@ -1,3 +1,40 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* index.css */
+body {
+  margin: 0;
+  font-family: sans-serif;
+  color: #333;
+  background-color: #fff;
+}
+
+section {
+  padding: 80px 20px;
+  text-align: center;
+  background-color: #f3f4f6; /* beige */
+}
+
+h1 {
+  font-size: 3rem;
+  font-weight: bold;
+  color: #228b22; /* forest */
+  margin-bottom: 1rem;
+}
+
+p {
+  font-size: 1.125rem;
+  color: #8b5e3c; /* bark */
+  margin-bottom: 1.5rem;
+}
+
+button {
+  background-color: #228b22;
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #1a6e1a;
+}
