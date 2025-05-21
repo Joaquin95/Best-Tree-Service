@@ -38,3 +38,46 @@ button {
 button:hover {
   background-color: #1a6e1a;
 }
+
+/* Estimate page form */
+.form-container {
+    max-width: 400px;
+    margin: 2rem auto;
+    padding: 1rem 2rem;
+    border: 1px solid #8B5E3C;
+    border-radius: 8px;
+    font-family: sans-serif;
+    background-color: #f3f4f6; /* beige */
+}
+.form-container h2 {
+    text-align: center;
+    color: #228b22; /* forest */
+    margin-bottom: 1rem;
+}
+.form-container form label {
+    display: block;
+    margin-bottom: 1rem;
+    color: #4A4A4A; /* bark */
+}
+.form-container form input {
+    width: 100%;
+    padding: 0.4rem;
+    border: 1px solid #8B5E3C; /* bark */
+    border-radius: 4px;
+    margin-top: 0.2rem;
+}
+.form-container form button {
+    width: 100%;
+    background-color: #228b22; /* forest */
+    color: white;
+    padding: 0.6rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-weight: bold;
+    font-size: 1rem;
+}
+.form-container form button:hover {
+    background-color: #196619;
+}

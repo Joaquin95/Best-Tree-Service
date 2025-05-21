@@ -6,7 +6,7 @@ export default function Home() {
     <section>
       <h1>Best Tree Service</h1>
       <p>Professional Tree Trimming & Removal in Your Area</p>
-      <button>Get a Free Estimate</button>
+      <button onClick={() => window.open('/estimate', '_blank')}>Get a Free Estimate</button>
     </section>
   );
 }
