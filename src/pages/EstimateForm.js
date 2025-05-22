@@ -100,7 +100,7 @@ export default function EstimateForm() {
             name="message"
             value={formData.message}
             onChange={handleChange}
-            maxLength={500}
+            maxLength={3000} 
             placeholder="Please provide details about your tree service needs."
             required
           />

@@ -17,6 +17,12 @@ export default function Home() {
         </button>
       </section>
 
+      <section className="services-section">
+        <h2>Our Work</h2>
+      
+
+        </section>
+
       {/* The hero section contains a heading, subheading, and a call-to-action button */
       /* The button opens a new tab to the estimate page when clicked */}
 

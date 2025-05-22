@@ -3,13 +3,45 @@ body {
   margin: 0;
   font-family: sans-serif;
   color: #333;
-  background-color: #fff;
+  background-color: #a7fcbf;
 }
 
-section {
+.default-section {
   padding: 80px 20px;
   text-align: center;
-  background-color: #f3f4f6; /* beige */
+  background-color: #f3f4f6;
+}
+.hero-section {
+  text-align: center;
+  margin: 0 auto;
+  padding: 60px 20px;
+  border-radius: 80px;
+  max-width: 800px;
+}
+.services-section {
+  text-align: center;
+  margin: 0 auto;
+  padding: 60px 20px;
+  border-radius: 80px;
+  max-width: 800px;
+}
+.about-section {
+  background-color: #f0fff4;
+  padding: 2.5rem;
+  margin: 40px auto;
+  max-width: 800px;
+  border-radius: 80px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+  text-align: center;
+}
+.contact-section {
+  background-color: #f0fff4;
+  padding: 2.5rem;
+  margin: 40px auto;
+  max-width: 800px;
+  border-radius: 80px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
+  text-align: center;
 }
 
 h1 {
@@ -21,22 +53,32 @@ h1 {
 
 p {
   font-size: 1.125rem;
-  color: #8b5e3c; /* bark */
+  color:  #5c3c20; /* bark */
   margin-bottom: 1.5rem;
 }
 
-button {
-  background-color: #228b22;
+
+.heading {
+  font-size: 3rem;
+  color: #2e7d32; /* deep green */
+}
+.subheading {
+  font-size: 1.2rem;
+  color: #555;
+  margin-bottom: 30px;
+}
+.cta-button {
+  background-color: #2e7d32;
   color: white;
   padding: 12px 24px;
   border: none;
   border-radius: 8px;
+  font-size: 1rem;
   cursor: pointer;
-  transition: background-color 0.3s ease;
 }
 
-button:hover {
-  background-color: #1a6e1a;
+.cta-button:hover {
+  background-color: #1b5e20;
 }
 
 /* Estimate page form */
@@ -47,7 +89,7 @@ button:hover {
   border: 1px solid #8b5e3c;
   border-radius: 8px;
   font-family: sans-serif;
-  background-color: #f3f4f6; /* beige */
+  background-color: rgb(202, 229, 202) /* beige */
 }
 .form-container h2 {
   text-align: center;
