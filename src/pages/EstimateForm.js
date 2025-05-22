@@ -7,6 +7,7 @@ export default function EstimateForm() {
     email: "",
     phone: "",
     address: "",
+    message: "",
   });
 
   const [status, setStatus] = useState(""); // State to manage form submission status
@@ -37,6 +38,7 @@ export default function EstimateForm() {
         email: "",
         phone: "",
         address: "",
+        message: "",
       });
 
       setTimeout(() => {
@@ -89,6 +91,17 @@ export default function EstimateForm() {
             name="address"
             value={formData.address}
             onChange={handleChange}
+            required
+          />
+        </label>
+        <label>
+          Message:
+          <textarea
+            name="message"
+            value={formData.message}
+            onChange={handleChange}
+            maxLength={500}
+            placeholder="Please provide details about your tree service needs."
             required
           />
         </label>
