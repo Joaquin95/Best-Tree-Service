@@ -30,7 +30,7 @@ export default function EstimateForm() {
     });
 
     if (response.ok) {
-      setStatus('Success');
+      setStatus("Success");
       alert("Thank you for your submission! We will contact you shortly.");
       setFormData({
         name: "",
@@ -42,10 +42,9 @@ export default function EstimateForm() {
       setTimeout(() => {
         navigate("/"); // Redirect to home page after 5 seconds
       }, 5000); // Redirect to home page after 5 seconds
-
     } else {
-        alert("There was an error submitting the form. Please try again.");
-      setStatus('Error');
+      alert("There was an error submitting the form. Please try again.");
+      setStatus("Error");
     }
   };
 
@@ -96,8 +95,14 @@ export default function EstimateForm() {
         <button type="submit">Submit</button>
       </form>
 
-      {status === 'SUCCESS' && <p className="success">We will contact you shortly to discuss your needs.</p>}
-     {status === 'ERROR' && <p className="error">Oops! Something went wrong. Please try again.</p>}
+      {status === "SUCCESS" && (
+        <p className="success">
+          We will contact you shortly to discuss your needs.
+        </p>
+      )}
+      {status === "ERROR" && (
+        <p className="error">Oops! Something went wrong. Please try again.</p>
+      )}
     </section>
   );
 }
