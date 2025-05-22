@@ -148,6 +148,10 @@ textarea {
   margin-top: 5px;
   margin-bottom: 20px;
 }
+textarea::placeholder {
+  font-style: italic;
+  font-family: 'Cursive', cursive;
+}
 
 /* slider image styles */
 .slider-image {
