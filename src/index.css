@@ -19,6 +19,9 @@ body {
   border-radius: 80px;
   max-width: 1200px;
 }
+.hero-img{
+  height: 250px; /* Adjust as needed */
+}
 .services-section {
   text-align: center;
   margin: 0 auto;

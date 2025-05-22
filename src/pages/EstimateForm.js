@@ -43,8 +43,8 @@ export default function EstimateForm() {
       });
 
       setTimeout(() => {
-        navigate("/"); // Redirect to home page after 5 seconds
-      }, 5000); // Redirect to home page after 5 seconds
+        navigate("/"); // Redirect to home page after 2 seconds
+      }, 2000); // Redirect to home page after 2 seconds
     } else {
       alert("There was an error submitting the form. Please try again.");
       setStatus("Error");

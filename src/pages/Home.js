@@ -24,9 +24,10 @@ export default function Home() {
       {/* The Navbar component is imported and used here */}
       {/* It contains links to the experience and contact sections */}
       <section className="hero-section">
+        <img src="/images/logo.jpg" alt="logo" className="hero-img" />
         <h1 className="heading">Best Tree Service</h1>
         <p className="subheading">
-          Professional Tree Trimming & Removal Serving Dallas, TX and All surrounding areas
+          Professional Tree Trimming & Removal. Serving all of Dallas and surrounding areas.
         </p>
         <button
           className="cta-button"
