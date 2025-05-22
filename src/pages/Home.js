@@ -2,6 +2,7 @@ import React from "react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
+import Navbar from "../components/Navbar";
 
 import "../index.css";
 
@@ -19,6 +20,9 @@ export default function Home() {
 
   return (
     <main>
+      <Navbar />  
+      {/* The Navbar component is imported and used here */}
+      {/* It contains links to the experience and contact sections */}
       <section className="hero-section">
         <h1 className="heading">Best Tree Service</h1>
         <p className="subheading">
@@ -42,7 +46,7 @@ export default function Home() {
       </section>
 
       <section className="services-section">
-        <h2>Our Work</h2>
+        <h2>Experience</h2>
         <Slider {...sliderSettings}>
           <div>
             <img
@@ -85,8 +89,8 @@ export default function Home() {
       /* The button opens a new tab to the estimate page when clicked */}
 
       {/* About us Section vvv*/}
-      <section className="about-section">
-        <h2>Experience</h2>
+      <section id="about-us" className="about-section">
+        <h2>About Us</h2>
         <p>
           {" "}
           We are a team of experienced Professionals offering top-notch tree
@@ -98,7 +102,7 @@ export default function Home() {
       </section>
 
       {/* Contact us Section vv*/}
-      <section className="contact-section">
+      <section id="contact" className="contact-section">
         <h2>Contact us</h2>
         <p> For inquiries or to schedule a service, please contact us at:</p>
         <p>
