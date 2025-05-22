@@ -82,4 +82,15 @@ button:hover {
     background-color: #196619;
 }
 
-/* Home page */
+.success-message {
+  color: green;
+  font-weight: bold;
+  margin-top: 1rem;
+}
+
+.error-message {
+  color: red;
+  font-weight: bold;
+  margin-top: 1rem;
+}
+
