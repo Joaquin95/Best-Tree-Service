@@ -1,7 +1,22 @@
 import React from "react";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import Slider from "react-slick";
+
 import "../index.css";
 
 export default function Home() {
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    autoplay: true,
+    autoplaySpeed: 3000,
+    arrows: true,
+  };
+
   return (
     <main>
       <section className="hero-section">
@@ -19,9 +34,43 @@ export default function Home() {
 
       <section className="services-section">
         <h2>Our Work</h2>
-      
+        <Slider {...sliderSettings}>
+          <div>
+            <img
+              src="https://via.placeholder.com/800x400"
+              alt="Service 1"
+              className="slider-image"
+            />
+          </div>
 
-        </section>
+          <div>
+            <img
+              src="https://via.placeholder.com/800x400"
+              alt="Service 2"
+              className="slider-image"
+            />
+          </div>
+
+          <div>
+            <img
+              src="https://via.placeholder.com/800x400"
+              alt="Service 3"
+              className="slider-image"
+            />
+          </div>
+
+          <div>
+            <img
+              src="https://via.placeholder.com/800x400"
+              alt="Service 4"
+              className="slider-image"
+            />
+          </div>
+        </Slider>
+      </section>
+      {/* The slider section contains images of the services offered */}
+      {/* The slider settings include autoplay, speed, and number of slides to show */}
+      {/* Each slide contains an image representing a service offered */}
 
       {/* The hero section contains a heading, subheading, and a call-to-action button */
       /* The button opens a new tab to the estimate page when clicked */}

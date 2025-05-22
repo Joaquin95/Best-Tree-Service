@@ -148,3 +148,18 @@ textarea {
   margin-top: 5px;
   margin-bottom: 20px;
 }
+
+/* slider image styles */
+.slider-image {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  max-height: 500px;
+  object-fit: cover;
+}
+
+.services-section {
+  padding: 60px 20px;
+  text-align: center;
+  background-color: #f3f4f6;
+}
