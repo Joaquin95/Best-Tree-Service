@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function EstimateForm() {
   const [formData, setFormData] = useState({
@@ -9,6 +10,8 @@ export default function EstimateForm() {
   });
 
   const [status, setStatus] = useState(""); // State to manage form submission status
+  const navigate = useNavigate();
+  // useNavigate is a hook that returns a function that lets you navigate programmatically
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -28,13 +31,20 @@ export default function EstimateForm() {
 
     if (response.ok) {
       setStatus('Success');
+      alert("Thank you for your submission! We will contact you shortly.");
       setFormData({
         name: "",
         email: "",
         phone: "",
         address: "",
       });
+
+      setTimeout(() => {
+        navigate("/"); // Redirect to home page after 5 seconds
+      }, 5000); // Redirect to home page after 5 seconds
+
     } else {
+        alert("There was an error submitting the form. Please try again.");
       setStatus('Error');
     }
   };
