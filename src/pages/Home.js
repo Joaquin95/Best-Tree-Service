@@ -30,6 +30,15 @@ export default function Home() {
         >
           Get a Free Estimate
         </button>
+         <p>
+          Phone: <a href="tel:2145181437">(214)518-1437 </a>{" "}
+        </p>
+        <p>
+          Email:{" "}
+          <a href="mailto:Mintinvestments95@gmail.com">
+            Mintinvestments95@gmail.com{" "}
+          </a>{" "}
+        </p>
       </section>
 
       <section className="services-section">
@@ -37,32 +46,32 @@ export default function Home() {
         <Slider {...sliderSettings}>
           <div>
             <img
-              src="https://via.placeholder.com/800x400"
-              alt="Service 1"
+              src="/images/Emergency-tree-work.jpg"
+              alt="Emergency Tree Work"
               className="slider-image"
             />
           </div>
 
           <div>
             <img
-              src="https://via.placeholder.com/800x400"
-              alt="Service 2"
+              src="/images/residential-tree-services.jpg"
+              alt="Residential Tree Services"
               className="slider-image"
             />
           </div>
 
           <div>
             <img
-              src="https://via.placeholder.com/800x400"
-              alt="Service 3"
+              src="/images/tree-cutting.jpg"
+              alt="Tree Cutting"
               className="slider-image"
             />
           </div>
 
           <div>
             <img
-              src="https://via.placeholder.com/800x400"
-              alt="Service 4"
+              src="/images/Tree-trimming-from-ground.jpg"
+              alt="Tree Trimming from Ground"
               className="slider-image"
             />
           </div>
@@ -77,7 +86,7 @@ export default function Home() {
 
       {/* About us Section vvv*/}
       <section className="about-section">
-        <h2>About us</h2>
+        <h2>Experience</h2>
         <p>
           {" "}
           We are a team of experienced Professionals offering top-notch tree
