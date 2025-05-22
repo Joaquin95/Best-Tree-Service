@@ -3,7 +3,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import Navbar from "../components/Navbar";
-
+import Footer from "../components/Footer";
 import "../index.css";
 
 export default function Home() {
@@ -26,7 +26,7 @@ export default function Home() {
       <section className="hero-section">
         <h1 className="heading">Best Tree Service</h1>
         <p className="subheading">
-          Professional Tree Trimming & Removal in Your Area
+          Professional Tree Trimming & Removal Serving Dallas, TX and All surrounding areas
         </p>
         <button
           className="cta-button"
@@ -116,6 +116,9 @@ export default function Home() {
         </p>
         <p>Location: Dallas, TX</p>
       </section>
+      <Footer />
+      {/* The Footer component is imported and used here */}
+      {/* It contains the copyright information and contact details */}
     </main>
   );
 }

@@ -17,7 +17,7 @@ body {
   font-family: "Cursive", cursive;
   padding: 60px 20px;
   border-radius: 80px;
-   max-width: 1200px;
+  max-width: 1200px;
 }
 .services-section {
   text-align: center;
@@ -31,7 +31,7 @@ body {
   padding: 2.5rem;
   font-family: "Cursive", cursive;
   margin: 40px auto;
-   max-width: 1200px;
+  max-width: 1200px;
   border-radius: 80px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
   text-align: center;
@@ -40,7 +40,7 @@ body {
   background-color: #f0fff4;
   padding: 2.5rem;
   margin: 40px auto;
-   max-width: 1200px;
+  max-width: 1200px;
   font-family: "Cursive", cursive;
   border-radius: 80px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
@@ -173,7 +173,7 @@ textarea::placeholder {
 
 /* Navbar */
 .navbar {
-  background-color: #228b22; /* forest green */
+  background-color: #46a546; /* forest green */
   padding: 1rem;
   position: sticky;
   top: 0;
@@ -202,8 +202,32 @@ textarea::placeholder {
 }
 
 .navbar a:hover {
-  color: #c1f0c1;
+  color: #15e515;
 }
 html {
   scroll-behavior: smooth;
+}
+
+/* Footer */
+.footer {
+  background-color:#46a546;
+  padding: 1.5rem 0;
+  text-align: center;
+  margin-top: 40px;
+}
+
+.footer a {
+  color: #90ee90;
+  margin: 0 5px;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.footer-content {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 0 1rem;
 }
