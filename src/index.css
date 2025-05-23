@@ -19,7 +19,7 @@ body {
   border-radius: 80px;
   max-width: 1200px;
 }
-.hero-img{
+.hero-img {
   height: 250px; /* Adjust as needed */
 }
 .services-section {
@@ -95,7 +95,7 @@ p {
   border: 1px solid #8b5e3c;
   border-radius: 8px;
   font-family: sans-serif;
-  background-color: rgb(184, 249, 184); 
+  background-color: rgb(184, 249, 184);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 10.1);
 }
 .form-container h2 {
@@ -256,4 +256,16 @@ footer {
   justify-content: center;
   align-items: center;
   padding: 2rem 1rem;
+}
+
+/* Thank You Page */
+.thank-you {
+  background-color: #f0fff4;
+  padding: 2.5rem;
+  text-align: center;
+  margin: 40px auto;
+  max-width: 1200px;
+  font-family: "Cursive", cursive;
+  border-radius: 80px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
 }

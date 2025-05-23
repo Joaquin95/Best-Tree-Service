@@ -12,8 +12,8 @@ export default function EstimateForm() {
   });
 
   const [status, setStatus] = useState(""); // State to manage form submission status
-  const navigate = useNavigate();
-  // useNavigate is a hook that returns a function that lets you navigate programmatically
+  const navigate = useNavigate(); // useNavigate is a hook that returns a function that lets you navigate
+  const [isLoading, setIsLoading] = useState(false); // State to manage loading spinner
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -21,33 +21,47 @@ export default function EstimateForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true); // Set loading state to true shows loading spinner
 
-    const response = await fetch("https://formspree.io/f/mgvkbynr", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Accept: "application/json",
-      },
-      body: JSON.stringify(formData),
-    });
-
-    if (response.ok) {
-      setStatus("Success");
-      alert("Thank you for your submission! We will contact you shortly.");
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        address: "",
-        message: "",
+    try {
+      // Google Analytics event tracking}
+      const response = await fetch("https://formspree.io/f/mgvkbynr", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify(formData),
       });
 
-      setTimeout(() => {
-        navigate("/"); // Redirect to home page after 2 seconds
-      }, 2000); // Redirect to home page after 2 seconds
-    } else {
-      alert("There was an error submitting the form. Please try again.");
-      setStatus("Error");
+      setIsLoading(false); // Set loading state to false hides loading spinner
+
+      if (response.ok) {
+        setStatus("Success");
+
+        if (window.gtag) {
+          window.gtag("event", "form_submit", {
+            form: "estimate_form",
+            status: "success",
+          });
+        }
+
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          address: "",
+          message: "",
+        });
+
+        navigate("/thank-you");
+      } else {
+        setStatus("ERROR");
+      }
+    } catch (error) {
+      console.error("Submission error:", error);
+      setIsLoading(false);
+      setStatus("ERROR");
     }
   };
 
@@ -108,7 +122,10 @@ export default function EstimateForm() {
                 required
               />
             </label>
-            <button type="submit">Submit</button>
+
+            <button type="submit" disabled={isLoading}>
+              {isLoading ? "Submitting..." : "Submit"}
+            </button>
           </form>
 
           {status === "SUCCESS" && (
