@@ -18,31 +18,54 @@ export default function Home() {
     arrows: true,
   };
 
+  const handleGAEvent = (eventName, label) => {
+    if (window.gtag) {
+      window.gtag("event", eventName, {
+        event_category: "engagement",
+        event_label: label,
+        value: 1,
+      });
+    }
+  };
+
   return (
     <main>
-      <Navbar />  
-      {/* The Navbar component is imported and used here */}
-      {/* It contains links to the experience and contact sections */}
+      <Navbar />
+      {/* The Navbar component is imported and used here */
+      /* It contains links to the experience and contact sections */}
       <section className="hero-section">
         <img src="/images/logo.jpg" alt="logo" className="hero-img" />
         <h1 className="heading">Best Tree Service</h1>
         <p className="subheading">
-          Professional Tree Trimming & Removal. Serving all of Dallas and surrounding areas.
+          <strong>Professional Tree Trimming & Removal. Serving all of Dallas and
+          surrounding areas.</strong>
         </p>
         <button
           className="cta-button"
-          onClick={() => window.open("/estimate", "_blank")}
+          onClick={() => {
+            handleGAEvent("estimate_button_click", "Estimate Button Click");
+            window.open("/estimate", "_blank");
+          }}
         >
           Get a Free Estimate
         </button>
-         <p>
-          Phone: <a href="tel:2145181437">(214)518-1437 </a>{" "}
+        <p>
+          Phone:{" "}
+          <a
+            href="tel:2145181437"
+            onClick={() => handleGAEvent("phone_click", "Phone Number Click")}
+          >
+            (214)518-1437
+          </a>
         </p>
         <p>
           Email:{" "}
-          <a href="mailto:Mintinvestments95@gmail.com">
-            Mintinvestments95@gmail.com{" "}
-          </a>{" "}
+          <a
+            href="mailto:Mintinvestments95@gmail.com"
+            onClick={() => handleGAEvent("email_click", "Email Click")}
+          >
+            Mintinvestments95@gmail.com
+          </a>
         </p>
       </section>
 
@@ -82,9 +105,9 @@ export default function Home() {
           </div>
         </Slider>
       </section>
-      {/* The slider section contains images of the services offered */}
-      {/* The slider settings include autoplay, speed, and number of slides to show */}
-      {/* Each slide contains an image representing a service offered */}
+      {/* The slider section contains images of the services offered */
+      /* The slider settings include autoplay, speed, and number of slides to show */
+      /* Each slide contains an image representing a service offered */}
 
       {/* The hero section contains a heading, subheading, and a call-to-action button */
       /* The button opens a new tab to the estimate page when clicked */}
@@ -93,12 +116,11 @@ export default function Home() {
       <section id="about-us" className="about-section">
         <h2>About Us</h2>
         <p>
-          {" "}
-          We are a team of experienced Professionals offering top-notch tree
+          <strong>We are a team of experienced Professionals offering top-notch tree
           services. Whether you need tree trimming, removal, or emergency
           services, we have you covered. Our team is dedicated to providing the
           best service possible, ensuring your trees are healthy and your
-          property is safe.
+          property is safe.</strong> 
         </p>
       </section>
 
@@ -107,13 +129,22 @@ export default function Home() {
         <h2>Contact us</h2>
         <p> For inquiries or to schedule a service, please contact us at:</p>
         <p>
-          Phone: <a href="tel:2145181437">(214)518-1437 </a>{" "}
+          Phone:{" "}
+          <a
+            href="tel:2145181437"
+            onClick={() => handleGAEvent("phone_click", "Phone Number Click")}
+          >
+            (214)518-1437{" "}
+          </a>{" "}
         </p>
         <p>
           Email:{" "}
-          <a href="mailto:Mintinvestments95@gmail.com">
+          <a
+            href="mailto:Mintinvestments95@gmail.com"
+            onClick={() => handleGAEvent("email_click", "Email Click")}
+          >
             Mintinvestments95@gmail.com{" "}
-          </a>{" "}
+          </a>
         </p>
         <p>Location: Dallas, TX</p>
       </section>
