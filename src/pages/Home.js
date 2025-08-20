@@ -35,7 +35,7 @@ export default function Home() {
       /* It contains links to the experience and contact sections */}
       <section className="hero-section">
         <img src="/images/logo.jpg" alt="logo" className="hero-img" />
-        <h1 className="heading">Best Tree Service</h1>
+        <h1 className="heading">Best Tree Service DFW</h1>
         <p className="subheading">
           <strong>Professional Tree Trimming & Removal. Serving all of Dallas and
           surrounding areas.</strong>
@@ -52,19 +52,19 @@ export default function Home() {
         <p>
           Phone:{" "}
           <a
-            href="tel:2145181437"
+            href="tel:2149447415"
             onClick={() => handleGAEvent("phone_click", "Phone Number Click")}
           >
-            (214)518-1437
+            (214)944-7415
           </a>
         </p>
         <p>
           Email:{" "}
           <a
-            href="mailto:Mintinvestments95@gmail.com"
+            href="mailto:Besttreeservicedfw@gmail.com"
             onClick={() => handleGAEvent("email_click", "Email Click")}
           >
-            Mintinvestments95@gmail.com
+           Besttreeservicedfw@gmail.com
           </a>
         </p>
       </section>
@@ -131,19 +131,19 @@ export default function Home() {
         <p>
           Phone:{" "}
           <a
-            href="tel:2145181437"
+            href="tel:2149447415"
             onClick={() => handleGAEvent("phone_click", "Phone Number Click")}
           >
-            (214)518-1437{" "}
+            (214)944-7415{" "}
           </a>{" "}
         </p>
         <p>
           Email:{" "}
           <a
-            href="mailto:Mintinvestments95@gmail.com"
+            href="mailto:Besttreeservicedfw@gmail.com"
             onClick={() => handleGAEvent("email_click", "Email Click")}
           >
-            Mintinvestments95@gmail.com{" "}
+            Besttreeservicedfw@gmail.com{" "}
           </a>
         </p>
         <p>Location: Dallas, TX</p>
