@@ -3,7 +3,7 @@ body {
   margin: 0;
   font-family: sans-serif;
   color: #333;
-  background-color: #a7fcbf;
+  background-color: #0f5122;
 }
 
 .default-section {
@@ -14,7 +14,7 @@ body {
 .hero-section {
   text-align: center;
   margin: 0 auto;
-  font-family: "Cursive", cursive;
+  /* font-family: "Cursive", cursive; */
   padding: 60px 20px;
   border-radius: 80px;
   max-width: 1200px;
@@ -65,16 +65,16 @@ p {
 
 .heading {
   font-size: 3rem;
-  color: #2e7d32; /* deep green */
+  color: #1dec1d; /* deep green */
 }
 .subheading {
   font-size: 1.2rem;
-  color: #555;
+  color: #1dec1d;
   margin-bottom: 30px;
 }
 .cta-button {
   background-color: #2e7d32;
-  color: white;
+  color: #1dec1d;
   padding: 12px 24px;
   border: none;
   border-radius: 8px;
