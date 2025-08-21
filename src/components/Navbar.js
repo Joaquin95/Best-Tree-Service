@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+
 import "../index.css";
 
 export default function Navbar() {
@@ -20,9 +22,6 @@ export default function Navbar() {
       </button>
       <ul className={`nav-list ${isOpen ? "open" : ""}`}>
         <li>
-          <a href="#about-us">About Us</a>
-        </li>
-        <li>
           <a onClick={() => navigate("/services")}>Services</a>
         </li>
 
@@ -30,8 +29,11 @@ export default function Navbar() {
           <a href="#service-area">Service Area</a>
         </li>
         <li>
-          <a href="#gallery">Gallery</a>
+          <Link to="/gallery">Gallery</Link>
         </li>
+        {/* <li>
+          <a href="#about-us">About Us</a>
+        </li> */}
         <li>
           <a href="#contact">Contact Us</a>
         </li>

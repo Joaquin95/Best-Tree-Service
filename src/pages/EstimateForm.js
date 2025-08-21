@@ -55,7 +55,7 @@ export default function EstimateForm() {
         },
         body: JSON.stringify({
           ...formData,
-          _replyto: "besttreeservicedfw@gmail.com",
+          _replyto: "Mintinvestments95@gmail.com",
           _subject: "New Tree service quote Submitted 📩 - J.M.",
         }),
       });
@@ -66,9 +66,10 @@ export default function EstimateForm() {
         setStatus("Success");
 
         if (window.gtag) {
+          const pagePath = window.location.pathname; 
           window.gtag("event", "form_submit", {
             event_category: "lead_generation",
-            event_label: "EstimateForm.js",
+            event_label: `EstimateForm - ${pagePath}`, 
             value: 1,
           });
         }
@@ -181,7 +182,6 @@ export default function EstimateForm() {
           )}
         </section>
       </main>
-      <Footer />
     </div>
   );
 }

@@ -2,13 +2,17 @@ import React, { useState } from "react";
 
 export default function InlineEstimateForm({ onSuccess }) {
   const [formData, setFormData] = useState({
-    name: "", email: "", phone: "", address: "", message: "",
+    name: "",
+    email: "",
+    phone: "",
+    address: "",
+    message: "",
   });
   const [status, setStatus] = useState("");
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
 
-    const handleChange = (e) => {
+  const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setErrors({ ...errors, [e.target.name]: "" });
   };
@@ -53,14 +57,20 @@ export default function InlineEstimateForm({ onSuccess }) {
       if (response.ok) {
         setStatus("Success");
         if (window.gtag) {
+          const pagePath = window.location.pathname;
           window.gtag("event", "form_submit", {
             event_category: "lead_generation",
-            event_label: "InlineEstimateForm",
+            event_label: `InlineEstimateForm - ${pagePath}`,
             value: 1,
           });
         }
+
         setFormData({
-          name: "", email: "", phone: "", address: "", message: "",
+          name: "",
+          email: "",
+          phone: "",
+          address: "",
+          message: "",
         });
         if (onSuccess) onSuccess();
       } else {
@@ -92,7 +102,13 @@ export default function InlineEstimateForm({ onSuccess }) {
               />
             ) : (
               <input
-                type={field === "email" ? "email" : field === "phone" ? "tel" : "text"}
+                type={
+                  field === "email"
+                    ? "email"
+                    : field === "phone"
+                    ? "tel"
+                    : "text"
+                }
                 name={field}
                 value={formData[field]}
                 onChange={handleChange}
@@ -102,12 +118,19 @@ export default function InlineEstimateForm({ onSuccess }) {
             {errors[field] && <span className="error">{errors[field]}</span>}
           </label>
         ))}
-        <button type="submit" disabled={isLoading || Object.keys(errors).length > 0}>
+        <button
+          type="submit"
+          disabled={isLoading || Object.keys(errors).length > 0}
+        >
           {isLoading ? "Submitting..." : "Submit"}
         </button>
       </form>
-      {status === "SUCCESS" && <p className="success">We’ll contact you shortly.</p>}
-      {status === "ERROR" && <p className="error">Something went wrong. Try again.</p>}
+      {status === "SUCCESS" && (
+        <p className="success">We’ll contact you shortly.</p>
+      )}
+      {status === "ERROR" && (
+        <p className="error">Something went wrong. Try again.</p>
+      )}
     </section>
   );
 }

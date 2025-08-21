@@ -8,7 +8,9 @@ import EstimateForm from "./pages/EstimateForm";
 import StumpGrinding from "./pages/StumpGrinding";
 import TreeTrimming from "./pages/TreeTrimming";
 import Services from "./pages/Services";
-ReactGA.initialize("G-XXXXXXX"); // Replace with your Google Analytics Measurement ID
+import Gallery from "./pages/Gallery";
+
+ReactGA.initialize("G-7WL7RH72E5");
 
 function App() {
   useEffect(() => {
@@ -22,6 +24,7 @@ function App() {
       <Route path="/estimate" element={<EstimateForm />} />
       <Route path="/stump-grinding" element={<StumpGrinding />} />
       <Route path="/tree-trimming" element={<TreeTrimming />} />
+      <Route path="/gallery" element={<Gallery />} />
       <Route path="/services" element={<Services />} />
       <Route path="/thank-you" element={<ThankYou />} />
     </Routes>

@@ -3,7 +3,7 @@ body {
   margin: 0;
   font-family: sans-serif;
   color: #333;
-  background-color: hsl(145, 37%, 82%);
+  background-color: hsla(122, 75%, 50%, 0.77);
 }
 
 .default-section {
@@ -21,7 +21,7 @@ body {
   padding: 2.5rem;
   margin: 40px auto;
   max-width: 1200px;
-
+  color: #5c3c20;
   box-shadow: 0 4px 12px rgba(0, 70, 0, 100.45);
   text-align: center;
 }
@@ -29,7 +29,7 @@ body {
   padding: 2.5rem;
   margin: 40px auto;
   max-width: 1200px;
-
+  color: #5c3c20;
   box-shadow: 0 4px 12px rgba(0, 70, 0, 100.45);
   text-align: center;
 }
@@ -37,7 +37,7 @@ body {
 h1 {
   font-size: 3rem;
   font-weight: bold;
-  color: #5c3c20; 
+  color: #5c3c20;
   margin-bottom: 1rem;
 }
 
@@ -79,12 +79,12 @@ p {
   border: 1px solid #8b5e3c;
   border-radius: 8px;
   font-family: sans-serif;
-  background-color:hsl(145, 37%, 82%);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 10.1);
+  background-color: hsla(122, 95%, 68%, 0.77);
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 10.1);
 }
 .form-container h2 {
   text-align: center;
-  color: #5c3c20; 
+  color: #5c3c20;
   margin-bottom: 1rem;
 }
 .form-container form label {
@@ -144,19 +144,9 @@ textarea::placeholder {
   font-family: "Cursive", cursive;
 }
 
-/* slider image styles */
-.slider-image {
-  width: 80%;
-  max-height: 900px;
-  object-fit: cover;
-  border-radius: 10px;
-  display: block;
-  margin: 0 auto;
-  box-shadow: 0 4px 12px rgba(0, 0, 50, 1.95);
-}
 /* Navbar */
 .navbar {
-  background-color: hsl(146, 29%, 59%);
+  background-color: hsla(122, 68%, 71%, 0.957);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -190,7 +180,7 @@ textarea::placeholder {
 }
 
 .navbar a:hover {
-  color: #15e515;
+  color: #5c3c20;
 }
 html {
   scroll-behavior: smooth;
@@ -267,7 +257,7 @@ html {
 
 /* Footer */
 .footer {
-  background-color: hsl(146, 29%, 59%);
+  background-color: hsla(122, 68%, 71%, 0.957);
   padding: 1.5rem 0;
   text-align: center;
   margin-top: 40px;
@@ -289,11 +279,11 @@ html {
   padding: 0 1rem;
 }
 .page-wrapper {
-  min-height: 100vh;
+  min-height: 25vh;
   display: flex;
   flex-direction: column;
-  justify-content: center; /* vertical */
-  align-items: center; /* horizontal */
+  justify-content: center;
+  align-items: center;
 }
 
 footer {
@@ -325,8 +315,7 @@ footer {
 /* Services Page */
 .services-hero {
   text-align: center;
-  padding: 2rem;
-  background-color: hsl(145, 37%, 82%);
+  padding: 2rem; 
 }
 
 .services-grid {
@@ -337,14 +326,62 @@ footer {
 }
 
 .service-card {
-  background: #c6b4a3; 
-  border: 1px solid #5c3c20; 
+  background: hsla(122, 75%, 50%, 0.77);
+  border: 1px solid #5c3c20;
   padding: 1.5rem;
   border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   transition: transform 0.2s ease;
 }
 
 .service-card:hover {
   transform: translateY(-4px);
+}
+/* Gallery Section */
+.gallery-section {
+  text-align: center;
+  padding: 3rem 1rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.cta-section {
+  text-align: center;
+  padding: 2rem;
+  margin-top: 2rem;
+}
+
+.cta-section h3 {
+  font-size: 1.8rem;
+  margin-bottom: 0.5rem;
+}
+
+.cta-section p {
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+}
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.gallery-item {
+  text-align: center;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.gallery-item p {
+  margin-top: 0.5rem;
+  font-weight: 500;
+}
+.h3 {
+  color: #5c3c20;
 }

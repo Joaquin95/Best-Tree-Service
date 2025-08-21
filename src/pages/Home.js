@@ -52,97 +52,41 @@ export default function Home() {
       {/* The Navbar component is imported and used here */
       /* It contains links to the experience and contact sections */}
       <section className="hero-section">
-        <h1 className="heading">Best Tree Service DFW</h1>
+        <h1 className="heading">
+          Best Tree Service DFW <br />
+          Residential & Commercial Tree Care Experts
+        </h1>
         <p className="subheading">
           <strong>
-            Professional Tree Trimming & Removal. Serving all of Dallas and
-            surrounding areas.
+            Serving Dallas–Fort Worth and all surrounding areas with
+            professional tree trimming, removal, and emergency services. Trusted
+            by homeowners and businesses since 2021
             <p>
-          Phone:{" "}
-          <a
-            href="tel:2149447415"
-            onClick={() => handleGAEvent("phone_click", "Phone Number Click")}
-          >
-            (214)944-7415
-          </a>
-        </p>
-        <p>
-          Email:{" "}
-          <a
-            href="mailto:Besttreeservicedfw@gmail.com"
-            onClick={() => handleGAEvent("email_click", "Email Click")}
-          >
-            Besttreeservicedfw@gmail.com
-          </a>
-        </p>
+              📞 <strong>Phone:</strong>{" "}
+              <a
+                href="tel:2149447415"
+                onClick={() =>
+                  handleGAEvent("phone_click", "Phone Number Click")
+                }
+              >
+                (214)944-7415
+              </a>
+            </p>
+            <p>
+              📧 <strong>Email:</strong>{" "}
+              <a
+                href="mailto:Besttreeservicedfw@gmail.com"
+                onClick={() => handleGAEvent("email_click", "Email Click")}
+              >
+                Besttreeservicedfw@gmail.com
+              </a>
+            </p>
           </strong>
         </p>
         <InlineEstimateForm onSuccess={() => navigate("/thank-you")} />
-
-      </section>
-      <section className="trust-section">
-        <h2>Trusted Tree Experts in DFW Since 2015</h2>
-        <p><strong>
-          With over a decade of experience serving Dallas, Mesquite, Garland,
-          and surrounding areas, we’re proud to be your go-to team for safe,
-          professional tree care.</strong>
-        </p>
-        <ul className="trust-list">
-          <li>✅ Fully Licensed & Insured</li>
-          <li>✅ Emergency Tree Removal Available 24/7</li>
-          <li>
-            ✅ Payment Options: Zelle, Cash, Check, Visa, Mastercard, Amex
-          </li>
-          <li>✅ Free Estimates & Transparent Pricing</li>
-        </ul>
-
-        {/* <section className="services-section"> */}
-        <h2>Experience</h2>
-        <Slider {...sliderSettings}>
-          <div>
-            <img
-              src="/images/Emergency-tree-work.jpg"
-              alt="Emergency Tree Work"
-              className="slider-image"
-            />
-          </div>
-
-          <div>
-            <img
-              src="/images/residential-tree-services.jpg"
-              alt="Residential Tree Services"
-              className="slider-image"
-            />
-          </div>
-
-          <div>
-            <img
-              src="/images/tree-cutting.jpg"
-              alt="Tree Cutting"
-              className="slider-image"
-            />
-          </div>
-
-          <div>
-            <img
-              src="/images/Tree-trimming-from-ground.jpg"
-              alt="Tree Trimming from Ground"
-              className="slider-image"
-            />
-          </div>
-        </Slider>
-      </section>
-      {/* </section> */}
-      {/* The slider section contains images of the services offered */
-      /* The slider settings include autoplay, speed, and number of slides to show */
-      /* Each slide contains an image representing a service offered */}
-
-      {/* The hero section contains a heading, subheading, and a call-to-action button */
-      /* The button opens a new tab to the estimate page when clicked */}
-
-      {/* About us Section vvv*/}
-      <section id="about-us" className="about-section">
-        <h2>About Us</h2>
+        <br />
+        {/* <section className="trust-section"> */}
+        <h2>Trusted Tree Experts in DFW Since 2021</h2>
         <p>
           <strong>
             We are a team of experienced Professionals offering top-notch tree
@@ -152,19 +96,49 @@ export default function Home() {
             property is safe.
           </strong>
         </p>
-        <h2>What Our Clients Say</h2>
-        <blockquote>
-          “Carlos and his team were fast, professional, and affordable.” — Sarah
-          M., Plano
-        </blockquote>
-        <blockquote>
-          “They removed a huge oak safely and cleaned up everything.” — James
-          T., Garland
-        </blockquote>
+
+        <strong>
+          <ul className="trust-list">
+            <li>✅ Fully Licensed & Insured</li>
+            <li>✅ Emergency Tree Removal Available 24/7</li>
+            <li>
+              ✅ Payment Options: Zelle, Cash, Check, Visa, Mastercard, Amex
+            </li>
+            <li>✅ Free Estimates & Transparent Pricing</li>
+          </ul>
+        </strong>
       </section>
 
       {/* Contact us Section */}
       <section id="contact" className="contact-section">
+        <h2>Client Testimonials</h2>
+        <blockquote>
+          <h3>
+            “Carlos and his team showed up on time, walked me through the entire
+            process, and had the tree removed within hours. They even cleaned up
+            the yard better than it was before. I’ve worked with other tree
+            services in the past, but this was by far the most professional
+            experience I’ve had.” — Sarah, Plano, Tx
+          </h3>
+        </blockquote>
+        <blockquote>
+          <h3>
+            “We had a massive oak leaning dangerously close to our house after a
+            storm. I called Best Tree Service DFW and they were out within the
+            hour. The crew was calm, confident, and clearly experienced. They
+            removed the tree safely I’ve already recommended them to my
+            neighbors.” — Issac, Mansfield, Tx
+          </h3>
+        </blockquote>
+        <blockquote>
+          <h3>
+            “I manage several commercial properties in Richardson, and Best Tree
+            Service DFW is now our go-to tree service. They’re responsive,
+            insured, and always leave the site spotless. Whether it’s trimming,
+            removal, or emergency work — they deliver every time.” — Monica
+            Property Manager, Richardson, TX{" "}
+          </h3>
+        </blockquote>
         <h2>Contact us</h2>
         <p> For inquiries or to schedule a service, please contact us at:</p>
         <p>
@@ -185,13 +159,36 @@ export default function Home() {
             Besttreeservicedfw@gmail.com{" "}
           </a>
         </p>
+        <p>
+          <a
+            href="https://www.facebook.com/profile.php?id=61560664231263"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => {
+              if (window.gtag) {
+                window.gtag("event", "click", {
+                  event_category: "social",
+                  event_label: "Facebook Profile Link",
+                  value: 1,
+                });
+              }
+            }}
+            style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
+          >
+            <img
+              src="/icons/facebook.svg"
+              alt="Facebook"
+              width="20"
+              height="20"
+              style={{ verticalAlign: "middle" }}
+            />
+            Visit us on Facebook
+          </a>
+        </p>
+
         <p>Location: Dallas, TX</p>
       </section>
       <Footer />
-      {/* The Footer component is imported and used here */}
-      {/* It contains the copyright information and contact details */}
     </main>
   );
 }
-// This component serves as the home page of the application
-// It includes a title, description, and a button for getting a free estimate

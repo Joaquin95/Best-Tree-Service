@@ -1,25 +1,17 @@
 import React from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-
+import EstimateForm from "./EstimateForm";
 const services = [
   "Emergency Tree Removal",
-  "Tree Cutting",
-  "Tree Work",
-  "Tree Stump Grinding",
-  "Tree Stump Removal",
   "Emergency Storm Damage",
-  "Tree Care",
-  "Tree Removal",
-  "Limb Removal",
+  "Tree Cutting",
+  "Tree Stump Removal / Grinding",
+  "Tree Stump Removal",
+  "Tree and Limb Removal",
   "Tree Pruning",
-  "Tree Trimming",
-  "Tree Thinning",
-  "Lot Clearing",
-  "Tree Clearing",
-  "Brush Clearing",
-  "Land Clearing",
-  "Tree Fertilizing",
+  "Tree Trimming and Thinning",
+  "Tree and Brush Clearing",
 ];
 
 export default function Services() {
@@ -29,10 +21,14 @@ export default function Services() {
       <section className="services-hero">
         <h1>Tree Services in Dallas-Fort Worth and All Surrounding Areas</h1>
         <p>
-          We offer a full range of professional tree care services to keep your
-          property safe, beautiful, and thriving. Whether you need emergency
-          removal or seasonal trimming, our certified arborists are here to
-          help.
+          <strong>
+            We specialize in tree trimming, removal, stump grinding, and
+            emergency response. Whether you're a homeowner or a commercial
+            property manager, our team ensures your trees are healthy and your
+            property is safe serving Dallas, Mesquite, Garland, and all surrounding
+            areas, we’re proud to be your go-to team for safe, professional tree
+            care.
+          </strong>
         </p>
       </section>
 
@@ -54,16 +50,11 @@ export default function Services() {
       </section>
       <section className="cta-section">
         <h2>Get your free estimate </h2>
-        <p>
+        <p><strong>
           We offer free estimates and fast scheduling. Let us know what you need
-          and we’ll take care of the rest.
+          and we’ll take care of the rest.</strong>
         </p>
-        <button
-          className="cta-button"
-          onClick={() => (window.location.href = "/#estimate-form")}
-        >
-          Get a Free Estimate
-        </button>
+        <EstimateForm />
       </section>
 
       <Footer />

@@ -6,10 +6,11 @@ export default function Footer() {
     <footer className="footer">
       <div className="footer-content">
         <p>
-          &copy; {new Date().getFullYear()} Best Tree Service DFW . All rights
-          reserved.
+          <strong>
+            &copy; {new Date().getFullYear()} Best Tree Service DFW . All rights
+            reserved.
+          </strong>
         </p>
-
       </div>
     </footer>
   );
