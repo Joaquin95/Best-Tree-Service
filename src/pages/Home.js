@@ -142,21 +142,21 @@ export default function Home() {
         <h2>Contact us</h2>
         <p> For inquiries or to schedule a service, please contact us at:</p>
         <p>
-          Phone:{" "}
+          📞 <strong>Phone:</strong>{" "}
           <a
             href="tel:2149447415"
             onClick={() => handleGAEvent("phone_click", "Phone Number Click")}
           >
-            (214)944-7415{" "}
-          </a>{" "}
+            (214)944-7415
+          </a>
         </p>
         <p>
-          Email:{" "}
+          📧 <strong>Email:</strong>{" "}
           <a
             href="mailto:Besttreeservicedfw@gmail.com"
             onClick={() => handleGAEvent("email_click", "Email Click")}
           >
-            Besttreeservicedfw@gmail.com{" "}
+            Besttreeservicedfw@gmail.com
           </a>
         </p>
         <p>
