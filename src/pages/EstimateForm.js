@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Footer from "../components/Footer";
+import { functions } from "../firebase"; // adjust path if needed
+import { httpsCallable } from "firebase/functions";
 
 export default function EstimateForm() {
   const [formData, setFormData] = useState({
@@ -47,49 +48,34 @@ export default function EstimateForm() {
 
     try {
       // Google Analytics event tracking}
-      const response = await fetch("https://formspree.io/f/mgvkbynr", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          ...formData,
-          _replyto: "Mintinvestments95@gmail.com",
-          _subject: "New Tree service quote Submitted 📩 - J.M.",
-        }),
+      const onFormSubmit = httpsCallable(functions, "onFormSubmit");
+      const result = await onFormSubmit(formData);
+      console.log("Firebase result:", result.data);
+
+      setStatus("SUCCESS");
+      if (window.gtag) {
+        const pagePath = window.location.pathname;
+        window.gtag("event", "form_submit", {
+          event_category: "lead_generation",
+          event_label: `EstimateForm - ${pagePath}`,
+          value: 1,
+        });
+      }
+
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        address: "",
+        message: "",
       });
 
-      setIsLoading(false);
-
-      if (response.ok) {
-        setStatus("Success");
-
-        if (window.gtag) {
-          const pagePath = window.location.pathname; 
-          window.gtag("event", "form_submit", {
-            event_category: "lead_generation",
-            event_label: `EstimateForm - ${pagePath}`, 
-            value: 1,
-          });
-        }
-
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          address: "",
-          message: "",
-        });
-
-        setTimeout(() => navigate("/thank-you"), 2000);
-      } else {
-        setStatus("ERROR");
-      }
+      setTimeout(() => navigate("/thank-you"), 2000);
     } catch (error) {
-      console.error("Submission error:", error);
-      setIsLoading(false);
+      console.error("Firebase submission error:", error);
       setStatus("ERROR");
+    } finally {
+      setIsLoading(false);
     }
   };
 

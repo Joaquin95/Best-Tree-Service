@@ -22,7 +22,7 @@ export default function Navbar() {
       </button>
       <ul className={`nav-list ${isOpen ? "open" : ""}`}>
         <li>
-          <a onClick={() => navigate("/services")}>Services</a>
+          <Link to="/services">Services</Link>
         </li>
 
         <li>

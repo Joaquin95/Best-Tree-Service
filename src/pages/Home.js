@@ -12,17 +12,6 @@ import InlineEstimateForm from "../components/InlineEstimateForm";
 export default function Home() {
   const navigate = useNavigate();
 
-  const sliderSettings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 3000,
-    arrows: true,
-  };
-
   const handleGAEvent = (eventName, label) => {
     if (window.gtag) {
       window.gtag("event", eventName, {

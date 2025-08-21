@@ -47,7 +47,7 @@ export default function InlineEstimateForm({ onSuccess }) {
         },
         body: JSON.stringify({
           ...formData,
-          _replyto: "besttreeservicedfw@gmail.com",
+          _replyto: "Mintinvestments95@gmail.com",
           _subject: "New Tree service quote Submitted 📩 - J.M.",
         }),
       });
