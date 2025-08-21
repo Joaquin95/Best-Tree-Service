@@ -23,6 +23,10 @@ export default function Navbar() {
           <a href="#about-us">About Us</a>
         </li>
         <li>
+          <a onClick={() => navigate("/services")}>Services</a>
+        </li>
+
+        <li>
           <a href="#service-area">Service Area</a>
         </li>
         <li>

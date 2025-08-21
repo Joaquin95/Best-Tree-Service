@@ -7,6 +7,7 @@ import Footer from "../components/Footer";
 import { Helmet } from "react-helmet";
 import "../index.css";
 import { useNavigate } from "react-router-dom";
+import InlineEstimateForm from "../components/InlineEstimateForm";
 
 export default function Home() {
   const navigate = useNavigate();
@@ -56,18 +57,7 @@ export default function Home() {
           <strong>
             Professional Tree Trimming & Removal. Serving all of Dallas and
             surrounding areas.
-          </strong>
-        </p>
-        <button
-          className="cta-button"
-          onClick={() => {
-            handleGAEvent("estimate_button_click", "Estimate Button Click");
-            navigate("/estimate");
-          }}
-        >
-          Get a Free Estimate
-        </button>
-        <p>
+            <p>
           Phone:{" "}
           <a
             href="tel:2149447415"
@@ -85,9 +75,28 @@ export default function Home() {
             Besttreeservicedfw@gmail.com
           </a>
         </p>
-      </section>
+          </strong>
+        </p>
+        <InlineEstimateForm onSuccess={() => navigate("/thank-you")} />
 
-      <section className="services-section">
+      </section>
+      <section className="trust-section">
+        <h2>Trusted Tree Experts in DFW Since 2015</h2>
+        <p><strong>
+          With over a decade of experience serving Dallas, Mesquite, Garland,
+          and surrounding areas, we’re proud to be your go-to team for safe,
+          professional tree care.</strong>
+        </p>
+        <ul className="trust-list">
+          <li>✅ Fully Licensed & Insured</li>
+          <li>✅ Emergency Tree Removal Available 24/7</li>
+          <li>
+            ✅ Payment Options: Zelle, Cash, Check, Visa, Mastercard, Amex
+          </li>
+          <li>✅ Free Estimates & Transparent Pricing</li>
+        </ul>
+
+        {/* <section className="services-section"> */}
         <h2>Experience</h2>
         <Slider {...sliderSettings}>
           <div>
@@ -123,6 +132,7 @@ export default function Home() {
           </div>
         </Slider>
       </section>
+      {/* </section> */}
       {/* The slider section contains images of the services offered */
       /* The slider settings include autoplay, speed, and number of slides to show */
       /* Each slide contains an image representing a service offered */}
