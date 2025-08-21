@@ -4,9 +4,13 @@ import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
+import { Helmet } from "react-helmet";
 import "../index.css";
+import { useNavigate } from "react-router-dom";
 
 export default function Home() {
+  const navigate = useNavigate();
+
   const sliderSettings = {
     dots: true,
     infinite: true,
@@ -30,21 +34,35 @@ export default function Home() {
 
   return (
     <main>
+      <Helmet>
+        <title>Best Tree Service DFW | Tree Trimming & Removal</title>
+        <meta
+          name="description"
+          content="Professional tree services in Dallas-Fort Worth. Free estimates. Emergency tree removal, trimming, and more."
+        />
+        <meta
+          name="keywords"
+          content="tree service DFW, tree trimming Dallas, emergency tree removal, arborist, stump grinding"
+        />
+        <meta name="author" content="J.M. for Best Tree Service DFW" />
+      </Helmet>
+
       <Navbar />
       {/* The Navbar component is imported and used here */
       /* It contains links to the experience and contact sections */}
       <section className="hero-section">
-        <img src="/images/Best_Tree_Service.jpg" alt="logo" className="hero-img" />
         <h1 className="heading">Best Tree Service DFW</h1>
         <p className="subheading">
-          <strong>Professional Tree Trimming & Removal. Serving all of Dallas and
-          surrounding areas.</strong>
+          <strong>
+            Professional Tree Trimming & Removal. Serving all of Dallas and
+            surrounding areas.
+          </strong>
         </p>
         <button
           className="cta-button"
           onClick={() => {
             handleGAEvent("estimate_button_click", "Estimate Button Click");
-            window.open("/estimate", "_blank");
+            navigate("/estimate");
           }}
         >
           Get a Free Estimate
@@ -64,7 +82,7 @@ export default function Home() {
             href="mailto:Besttreeservicedfw@gmail.com"
             onClick={() => handleGAEvent("email_click", "Email Click")}
           >
-           Besttreeservicedfw@gmail.com
+            Besttreeservicedfw@gmail.com
           </a>
         </p>
       </section>
@@ -116,15 +134,26 @@ export default function Home() {
       <section id="about-us" className="about-section">
         <h2>About Us</h2>
         <p>
-          <strong>We are a team of experienced Professionals offering top-notch tree
-          services. Whether you need tree trimming, removal, or emergency
-          services, we have you covered. Our team is dedicated to providing the
-          best service possible, ensuring your trees are healthy and your
-          property is safe.</strong> 
+          <strong>
+            We are a team of experienced Professionals offering top-notch tree
+            services. Whether you need tree trimming, removal, or emergency
+            services, we have you covered. Our team is dedicated to providing
+            the best service possible, ensuring your trees are healthy and your
+            property is safe.
+          </strong>
         </p>
+        <h2>What Our Clients Say</h2>
+        <blockquote>
+          “Carlos and his team were fast, professional, and affordable.” — Sarah
+          M., Plano
+        </blockquote>
+        <blockquote>
+          “They removed a huge oak safely and cleaned up everything.” — James
+          T., Garland
+        </blockquote>
       </section>
 
-      {/* Contact us Section vv*/}
+      {/* Contact us Section */}
       <section id="contact" className="contact-section">
         <h2>Contact us</h2>
         <p> For inquiries or to schedule a service, please contact us at:</p>

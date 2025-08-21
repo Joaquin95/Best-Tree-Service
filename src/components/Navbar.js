@@ -1,12 +1,32 @@
-import React from "react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import "../index.css";
 
 export default function Navbar() {
+  const navigate = useNavigate();
+  const [isOpen, setIsOpen] = useState(false);
+
   return (
     <nav className="navbar">
-      <ul>
+      <img
+        src="/images/Best_Tree_Service.jpg"
+        alt="logo"
+        className="nav-img"
+        onClick={() => navigate("/")}
+        style={{ cursor: "pointer" }}
+      />
+      <button className="hamburger" onClick={() => setIsOpen(!isOpen)}>
+        {isOpen ? "✖" : "☰"}
+      </button>
+      <ul className={`nav-list ${isOpen ? "open" : ""}`}>
         <li>
           <a href="#about-us">About Us</a>
+        </li>
+        <li>
+          <a href="#service-area">Service Area</a>
+        </li>
+        <li>
+          <a href="#gallery">Gallery</a>
         </li>
         <li>
           <a href="#contact">Contact Us</a>
