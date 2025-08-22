@@ -12,14 +12,12 @@
     "node": "20"
   },
   "main": "index.js",
- "dependencies": {
-   "firebase-functions": "^6.0.1",
-    "firebase-functions": "^4.5.0",
-   "@sendgrid/mail": "^8.1.5",
-   "dotenv": "^17.2.1",
-   "firebase-admin": "^12.6.0"
- }
-
+  "dependencies": {
+    "firebase-functions":  "^5.4.0",
+    "@sendgrid/mail": "^8.1.5",
+    "dotenv": "^17.2.1",
+    "firebase-admin": "^12.6.0"
+  },
   "devDependencies": {
     "firebase-functions-test": "^3.1.0"
   },

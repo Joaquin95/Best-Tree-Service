@@ -1,49 +1,50 @@
-const functions = require("firebase-functions");
-const sgMail   = require("@sendgrid/mail");
-const logger   = require("firebase-functions/logger");
-require("dotenv").config();  // only for local dev
+/**
+ * functions/index.js
+ * Option A: v2 SDK with dedicated v2 logger
+ */
 
-// Use Firebase config in prod, fallback to .env locally
-const sendgridKey = functions.config().sendgrid?.key ||
-                    process.env.SENDGRID_API_KEY;
-const smsGateway  = functions.config().sms?.gateway  ||
-                    process.env.SMS_GATEWAY_EMAIL;
+const { onCall } = require("firebase-functions/v2/https");
+const { logger } = require("firebase-functions/v2/logger");
+require("dotenv").config();
 
-sgMail.setApiKey(sendgridKey);
+const sgMail           = require("@sendgrid/mail");
+const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
+const SMS_GATEWAY_EMAIL = process.env.SMS_GATEWAY_EMAIL;
 
-exports.onFormSubmit = functions
-  .region("us-central1")
-  .https.onCall(async (data, context) => {
-    const { name, email, phone, address, message } = data;
-
-    logger.info("Form submission received", { name, email, phone });
-
-    if (!name || !email || !phone || !address) {
-      throw new functions.https.HttpsError(
-        "invalid-argument",
-        "All fields are required"
-      );
-    }
-
-    // Email alert
-    await sgMail.send({
-      to:   "Mintinvestments95@gmail.com",
-      from: "Mintinvestments95@gmail.com",
-      subject: "New Tree Service Quote Request - J.M.",
-      text: `Name: ${name}
-Email: ${email}
-Phone: ${phone}
-Address: ${address}
-Message: ${message}`,
-    });
-
-    // Email-to-SMS alert
-    await sgMail.send({
-      to:      smsGateway,
-      from:    "Mintinvestments95@gmail.com",
-      subject: "",
-      text:    `New quote: ${name}, ${phone}, ${address} J.M`,
-    });
-
-    return { status: "success" };
+// Immediately fail if critical env vars are missing
+if (!SENDGRID_API_KEY || !SMS_GATEWAY_EMAIL) {
+  logger.error("Missing required environment variables", {
+    SENDGRID_API_KEY: Boolean(SENDGRID_API_KEY),
+    SMS_GATEWAY_EMAIL: Boolean(SMS_GATEWAY_EMAIL),
   });
+  throw new Error(
+    "Environment variables SENDGRID_API_KEY and SMS_GATEWAY_EMAIL are required"
+  );
+}
+
+// Configure SendGrid
+sgMail.setApiKey(SENDGRID_API_KEY);
+
+exports.onFormSubmit = onCall(
+  { region: "us-central1", timeoutSeconds: 60 },
+  async (data, context) => {
+    logger.info("Form submission received", { data, uid: context.auth?.uid });
+
+    // Your business logic here: send email, transform data, queue SMS, etc.
+    const msg = {
+      to: SMS_GATEWAY_EMAIL,
+      from: "no-reply@yourdomain.com",
+      subject: "New Lead from Website",
+      text: `You have a new lead: ${JSON.stringify(data)}`,
+    };
+
+    try {
+      await sgMail.send(msg);
+      logger.info("Notification email sent successfully");
+      return { status: "success" };
+    } catch (err) {
+      logger.error("Failed to send email", err);
+      throw new Error("Notification delivery failed");
+    }
+  }
+);
