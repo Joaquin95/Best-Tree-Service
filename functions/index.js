@@ -1,17 +1,13 @@
-/**
- * functions/index.js
- * Option A: v2 SDK with dedicated v2 logger
- */
+import { onCall } from 'firebase-functions/v2/https';
+import { logger } from 'firebase-functions';
+import dotenv from 'dotenv';
+import sgMail from '@sendgrid/mail';
 
-const { onCall } = require("firebase-functions/v2/https");
-const { logger } = require("firebase-functions/v2/logger");
-require("dotenv").config();
+dotenv.config();
 
-const sgMail           = require("@sendgrid/mail");
 const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
 const SMS_GATEWAY_EMAIL = process.env.SMS_GATEWAY_EMAIL;
 
-// Immediately fail if critical env vars are missing
 if (!SENDGRID_API_KEY || !SMS_GATEWAY_EMAIL) {
   logger.error("Missing required environment variables", {
     SENDGRID_API_KEY: Boolean(SENDGRID_API_KEY),
@@ -22,18 +18,22 @@ if (!SENDGRID_API_KEY || !SMS_GATEWAY_EMAIL) {
   );
 }
 
-// Configure SendGrid
 sgMail.setApiKey(SENDGRID_API_KEY);
 
-exports.onFormSubmit = onCall(
-  { region: "us-central1", timeoutSeconds: 60 },
+export const onFormSubmit = onCall(
+  {
+    region: "us-central1",
+    timeoutSeconds: 60,
+  },
   async (data, context) => {
-    logger.info("Form submission received", { data, uid: context.auth?.uid });
+    logger.info("Form submission received", {
+      data,
+      uid: context.auth?.uid,
+    });
 
-    // Your business logic here: send email, transform data, queue SMS, etc.
     const msg = {
       to: SMS_GATEWAY_EMAIL,
-      from: "no-reply@yourdomain.com",
+      from: "Mintinvestments95@gmail.com",
       subject: "New Lead from Website",
       text: `You have a new lead: ${JSON.stringify(data)}`,
     };

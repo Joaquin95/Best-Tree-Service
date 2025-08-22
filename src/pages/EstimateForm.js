@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { functions } from "../firebase"; // adjust path if needed
+import { functions } from "../firebase";
 import { httpsCallable } from "firebase/functions";
+import { getAnalytics, logEvent } from "firebase/analytics";
 
 export default function EstimateForm() {
   const [formData, setFormData] = useState({
@@ -16,6 +17,7 @@ export default function EstimateForm() {
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
+  const onFormSubmit = httpsCallable(functions, "onFormSubmit");
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -28,9 +30,6 @@ export default function EstimateForm() {
     if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Invalid email";
     if (!formData.address.trim() || formData.address.length < 5) {
       newErrors.address = "Enter a valid address";
-    }
-    if (!/\d{5}(-\d{4})?$/.test(formData.address)) {
-      newErrors.address = "Enter a valid ZIP code";
     }
     if (!/^\d{10}$/.test(formData.phone))
       newErrors.phone = "Enter 10-digit phone";
@@ -45,10 +44,13 @@ export default function EstimateForm() {
       return;
     }
     setIsLoading(true);
+    const analytics = getAnalytics();
+    logEvent(analytics, "form_submit", {
+      category: "lead_generation",
+      label: "EstimateForm",
+    });
 
     try {
-      // Google Analytics event tracking}
-      const onFormSubmit = httpsCallable(functions, "onFormSubmit");
       const result = await onFormSubmit(formData);
       console.log("Firebase result:", result.data);
 
@@ -142,7 +144,7 @@ export default function EstimateForm() {
 
             <button
               type="submit"
-              disabled={isLoading || Object.keys(errors).length > 0}
+              disabled={isLoading}
             >
               {isLoading ? "Submitting..." : "Submit"}
             </button>
