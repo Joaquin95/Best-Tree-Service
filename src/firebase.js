@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getFunctions, httpsCallable } from "firebase/functions";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAUSar_kS1Joope969e4YCIeTqsn4urA1s",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: "best-tree-service-a1029.firebaseapp.com",
   projectId: "best-tree-service-a1029",
   storageBucket: "best-tree-service-a1029.appspot.com",

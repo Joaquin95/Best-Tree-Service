@@ -27,7 +27,6 @@ export default function Gallery() {
         />
       </Helmet>
       ;
-      <Navbar />
       <section className="gallery-section">
         <h2>Gallery</h2>
         <p>

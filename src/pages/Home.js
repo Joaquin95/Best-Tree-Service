@@ -1,7 +1,4 @@
 import React from "react";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import Slider from "react-slick";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import { Helmet } from "react-helmet";
@@ -25,7 +22,7 @@ export default function Home() {
   return (
     <main>
       <Helmet>
-        <title>Best Tree Service DFW | Tree Trimming & Removal</title>
+        <title>Best Tree Service DFW | Tree Removal & Trimming</title>
         <meta
           name="description"
           content="Professional tree services in Dallas-Fort Worth. Free estimates. Emergency tree removal, trimming, and more."
@@ -37,11 +34,8 @@ export default function Home() {
         <meta name="author" content="J.M. for Best Tree Service DFW" />
       </Helmet>
 
-      <Navbar />
-      {/* The Navbar component is imported and used here */
-      /* It contains links to the experience and contact sections */}
       <section className="hero-section">
-        <h1 className="heading">
+        {/* <h1 className="heading">
           Best Tree Service DFW <br />
           Residential & Commercial Tree Care Experts
         </h1>
@@ -71,7 +65,7 @@ export default function Home() {
               </a>
             </p>
           </strong>
-        </p>
+        </p> */}
         <InlineEstimateForm onSuccess={() => navigate("/thank-you")} />
         <br />
         {/* <section className="trust-section"> */}
@@ -96,7 +90,6 @@ export default function Home() {
             <li>✅ Free Estimates & Transparent Pricing</li>
           </ul>
         </strong>
-      </section>
 
       {/* Contact us Section */}
       <section id="contact" className="contact-section">
@@ -177,7 +170,9 @@ export default function Home() {
 
         <p>Location: Dallas, TX</p>
       </section>
+       </section>
       <Footer />
     </main>
+    
   );
 }

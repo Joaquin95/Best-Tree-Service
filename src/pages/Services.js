@@ -17,7 +17,6 @@ const services = [
 export default function Services() {
   return (
     <main>
-      <Navbar />
       <section className="services-hero">
         <h1>Tree Services in Dallas-Fort Worth and All Surrounding Areas</h1>
         <p>
