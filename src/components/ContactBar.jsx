@@ -15,7 +15,7 @@ export default function ContactBar({ handleGAEvent }) {
               >
                 (214) 944-7415
               </a>
-            </p><br />
+            </p><br /> <br/>
             <p> 
               📧 <strong>Email:</strong>{" "}
               <a
@@ -24,7 +24,33 @@ export default function ContactBar({ handleGAEvent }) {
               >
                 Besttreeservicedfw@gmail.com
               </a>
-            </p>
+            </p> <br/> <br/>
+                 <p>
+          <a
+            href="https://www.facebook.com/profile.php?id=61560664231263"
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={() => {
+              if (window.gtag) {
+                window.gtag("event", "click", {
+                  event_category: "social",
+                  event_label: "Facebook Profile Link",
+                  value: 1,
+                });
+              }
+            }}
+            style={{ display: "inline-flex", alignItems: "center", gap: "6px" }}
+          >
+            <img
+              src="/icons/facebook.svg"
+              alt="Facebook"
+              width="20"
+              height="20"
+              style={{ verticalAlign: "middle" }}
+            />
+            Visit us on Facebook
+          </a>
+        </p>
           {" "}<br />
           <h3>
            24/7 Service | Dallas / Ft. Worth Metroplex

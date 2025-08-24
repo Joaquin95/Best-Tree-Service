@@ -2,6 +2,10 @@ import React from "react";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import EstimateForm from "./EstimateForm";
+import StumpGrinding from "../pages/StumpGrinding";
+import TreeRemoval from "../pages/TreeRemoval";
+import TreeTrimming from "../pages/TreeTrimming";
+
 const services = [
   "Emergency Tree Removal",
   "Emergency Storm Damage",
@@ -45,17 +49,13 @@ export default function Services() {
                 : "Expert care tailored to your tree’s needs."}
             </p>
           </div>
+
         ))}
       </section>
-      <section className="cta-section">
-        <h2>Get your free estimate </h2>
-        <p><strong>
-          We offer free estimates and fast scheduling. Let us know what you need
-          and we’ll take care of the rest.</strong>
-        </p>
+               <StumpGrinding />
+      <TreeRemoval />
+      <TreeTrimming />
         <EstimateForm />
-      </section>
-
       <Footer />
     </main>
   );

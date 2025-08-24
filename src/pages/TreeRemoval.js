@@ -1,29 +1,27 @@
 import React from "react";
-import Footer from "../components/Footer";
-import Navbar from "../components/Navbar";
+
 
 export default function TreeRemoval() {
   return (
     <main>
-      <Navbar />
-      <section className="service-hero">
-        <h1>Tree Removal Services in Dallas-Fort Worth and all surrounding areas</h1>
+
+      <section className="contact-section">
+        <h1>Tree Removal Services</h1>
         <p>
           Whether it's a hazardous tree, storm damage, or clearing space for a new project — we remove trees safely, efficiently, professionally and affordably.
         </p>
-      </section>
-
-      <section className="service-details">
+  
         <h2>Why Choose Us for Tree Removal?</h2>
         <ul>
           <li>✅ Safe, insured removal with proper equipment</li>
           <li>✅ Emergency response available 24/7</li>
-          <li>✅ Cleanup and haul-away included</li>
+          <li>✅ Stump grinding and full cleanup </li>
+          <li>✅ Permit handling and city compliance</li>
+          <li>✅ Haul-away Option</li>
+          <li>✅ We handle all sizes, big or small</li>
           <li>✅ Free estimates and transparent pricing</li>
         </ul>
-      </section>
-
-      <section className="faq-section">
+   
         <h2>Frequently Asked Questions</h2>
         <h3>How much does tree removal cost?</h3>
         <p>Pricing depends on tree size, location, and complexity of the surroundings.</p>
@@ -35,7 +33,6 @@ export default function TreeRemoval() {
         <p>Absolutely. We work with utility companies and follow strict safety protocols.</p>
       </section>
 
-      <Footer />
     </main>
   );
 }
