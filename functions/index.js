@@ -4,9 +4,6 @@ import { onCall } from "firebase-functions/v2/https";
 import { logger } from "firebase-functions";
 import { initializeApp } from "firebase-admin/app";
 import sgMail from "@sendgrid/mail";
-import cors from 'cors';
-
-const corsHandler = cors({  origin: ['https://best-tree-service.vercel.app'] });
 
 initializeApp();
 
@@ -47,8 +44,11 @@ export const onFormSubmit = onCall(
 
     sgMail.setApiKey(APIKEY);
     logger.info("Form submission received", { data, uid: context.auth?.uid });
-
     try {
+      logger.info("Sending email via SendGrid", {
+        to: SMS_GATEWAY,
+        from: "Mintinvestments95@gmail.com",
+      });
       await sgMail.send({
         to: SMS_GATEWAY,
         from: "Mintinvestments95@gmail.com",
@@ -58,7 +58,10 @@ export const onFormSubmit = onCall(
       logger.info("SendGrid message sent successfully");
       return { status: "success" };
     } catch (err) {
-      logger.error("SendGrid error", err);
+      logger.error("SendGrid error", {
+        message: err.message,
+        stack: err.stack,
+      });
       throw new Error("Notification failed");
     }
   }
