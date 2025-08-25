@@ -1,50 +1,37 @@
-import { onCall } from 'firebase-functions/v2/https';
-import { logger } from 'firebase-functions';
-import dotenv from 'dotenv';
-import sgMail from '@sendgrid/mail';
+import * as functions from "firebase-functions";
+import sgMail from "@sendgrid/mail";
 
-dotenv.config();
 
-const SENDGRID_API_KEY = process.env.SENDGRID_API_KEY;
-const SMS_GATEWAY_EMAIL = process.env.SMS_GATEWAY_EMAIL;
+const { apikey, sms_gateway } = functions.config().sendgrid || {};
 
-if (!SENDGRID_API_KEY || !SMS_GATEWAY_EMAIL) {
-  logger.error("Missing required environment variables", {
-    SENDGRID_API_KEY: Boolean(SENDGRID_API_KEY),
-    SMS_GATEWAY_EMAIL: Boolean(SMS_GATEWAY_EMAIL),
-  });
+if (!apikey || !sms_gateway) {
+  functions.logger.error("Missing SENDGRID config", { apikey, sms_gateway });
   throw new Error(
-    "Environment variables SENDGRID_API_KEY and SMS_GATEWAY_EMAIL are required"
+    'Run: firebase functions:config:set sendgrid.apikey="…" sendgrid.sms_gateway="…"'
   );
 }
 
-sgMail.setApiKey(SENDGRID_API_KEY);
+sgMail.setApiKey(apikey);
 
-export const onFormSubmit = onCall(
-  {
-    region: "us-central1",
-    timeoutSeconds: 60,
-  },
-  async (data, context) => {
-    logger.info("Form submission received", {
-      data,
-      uid: context.auth?.uid,
-    });
+export const onFormSubmit = functions
+  .region("us-central1")
+  .runWith({ timeoutSeconds: 60 })
+  .https.onCall(async (data, context) => {
+    functions.logger.info("Form submission received", { data, uid: context.auth?.uid });
 
     const msg = {
-      to: SMS_GATEWAY_EMAIL,
+      to: sms_gateway,
       from: "Mintinvestments95@gmail.com",
       subject: "New Lead from Website",
-      text: `You have a new lead: ${JSON.stringify(data)}`,
+      text: `New lead data:\n${JSON.stringify(data, null, 2)}`,
     };
 
     try {
       await sgMail.send(msg);
-      logger.info("Notification email sent successfully");
+      functions.logger.info("Email sent");
       return { status: "success" };
     } catch (err) {
-      logger.error("Failed to send email", err);
-      throw new Error("Notification delivery failed");
+      functions.logger.error("SendGrid error", err);
+      throw new functions.https.HttpsError("internal", "Email delivery failed");
     }
-  }
-);
+  });

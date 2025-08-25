@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { functions } from "../firebase";
+import { httpsCallable } from "firebase/functions";
 
 export default function InlineEstimateForm({ onSuccess }) {
   const [formData, setFormData] = useState({
@@ -17,77 +19,79 @@ export default function InlineEstimateForm({ onSuccess }) {
     setErrors({ ...errors, [e.target.name]: "" });
   };
   const validateForm = () => {
+    const { name, email, phone, address } = formData;
     const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = "Name is required";
-    if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Invalid email";
-    if (!formData.address.trim() || formData.address.length < 5)
-      newErrors.address = "Enter a valid address";
-    if (!/\d{5}(-\d{4})?$/.test(formData.address))
-      newErrors.address = "Enter a valid ZIP code";
-    if (!/^\d{10}$/.test(formData.phone))
-      newErrors.phone = "Enter 10-digit phone";
+
+    if (!name.trim()) {
+      newErrors.name = "Name is required";
+    }
+
+    if (!/\S+@\S+\.\S+/.test(email)) {
+      newErrors.email = "Invalid email address";
+    }
+    const digits = phone.replace(/\D/g, "");
+    if (digits.length !== 10) {
+      newErrors.phone = "Enter a valid 10-digit phone number";
+    }
+    const addrTrim = address.trim();
+    const isZip = /^\d{5}$/.test(addrTrim);
+    if (!isZip && addrTrim.length < 5) {
+      newErrors.address =
+        "Enter a street address (min 5 chars) or a 5-digit ZIP code";
+    }
+
     return newErrors;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const validationErrors = validateForm();
-    if (Object.keys(validationErrors).length) {
-      setErrors(validationErrors);
+    console.log("🔔 Inline handleSubmit fired");
+
+    const newErrors = validateForm();
+    if (Object.keys(newErrors).length) {
+      setErrors(newErrors);
       return;
     }
     setIsLoading(true);
+    setStatus("");
 
     try {
-      const response = await fetch("https://formspree.io/f/mgvkbynr", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          ...formData,
-          _replyto: "Mintinvestments95@gmail.com",
-          _subject: "New Tree service quote Submitted 📩 - J.M.",
-        }),
+      const onFormSubmit = httpsCallable(functions, "onFormSubmit");
+      const res = await onFormSubmit(formData);
+      console.log("Function result:", res.data);
+
+      setStatus("SUCCESS");
+
+      if (window.gtag) {
+        const pagePath = window.location.pathname;
+        window.gtag("event", "form_submit", {
+          event_category: "lead_generation",
+          event_label: `InlineEstimateForm – ${pagePath}`,
+          value: 1,
+        });
+      }
+
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        address: "",
+        message: "",
       });
 
-      setIsLoading(false);
-
-      if (response.ok) {
-        setStatus("Success");
-        if (window.gtag) {
-          const pagePath = window.location.pathname;
-          window.gtag("event", "form_submit", {
-            event_category: "lead_generation",
-            event_label: `InlineEstimateForm - ${pagePath}`,
-            value: 1,
-          });
-        }
-
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          address: "",
-          message: "",
-        });
-        if (onSuccess) onSuccess();
-      } else {
-        setStatus("ERROR");
-      }
-    } catch (error) {
-      console.error("Submission error:", error);
-      setIsLoading(false);
+      if (onSuccess) onSuccess();
+    } catch (err) {
+      console.error("Submission error:", err);
       setStatus("ERROR");
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <section id="estimate-form" className="form-container">
       <h2>Get a Free Estimate</h2>
-      <form onSubmit={handleSubmit}>
-        {/* Form fields */}
+      <form onSubmit={handleSubmit} noValidate>
         {["name", "email", "phone", "address", "message"].map((field) => (
           <label key={field}>
             {field.charAt(0).toUpperCase() + field.slice(1)}:
@@ -98,7 +102,6 @@ export default function InlineEstimateForm({ onSuccess }) {
                 onChange={handleChange}
                 maxLength={3000}
                 placeholder="Please provide details about your tree service needs."
-                required
               />
             ) : (
               <input
@@ -118,19 +121,16 @@ export default function InlineEstimateForm({ onSuccess }) {
             {errors[field] && <span className="error">{errors[field]}</span>}
           </label>
         ))}
-        <button
-          type="submit"
-          disabled={isLoading || Object.keys(errors).length > 0}
-        >
-          {isLoading ? "Submitting..." : "Submit"}
+        <button type="submit" disabled={isLoading}>
+          {isLoading ? "Submitting…" : "Submit"}
         </button>
+        {status === "SUCCESS" && (
+          <p className="success">We’ll contact you shortly.</p>
+        )}
+        {status === "ERROR" && (
+          <p className="error">Something went wrong. Try again.</p>
+        )}
       </form>
-      {status === "SUCCESS" && (
-        <p className="success">We’ll contact you shortly.</p>
-      )}
-      {status === "ERROR" && (
-        <p className="error">Something went wrong. Try again.</p>
-      )}
     </section>
   );
 }

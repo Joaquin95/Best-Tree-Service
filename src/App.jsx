@@ -13,6 +13,7 @@ import TreeTrimming from "./pages/TreeTrimming";
 import Services from "./pages/Services";
 import Gallery from "./pages/Gallery";
 import ServiceArea from "./pages/ServiceArea";
+import 'leaflet/dist/leaflet.css';
 
 
 ReactGA.initialize("G-7WL7RH72E5");

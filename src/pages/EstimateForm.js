@@ -20,6 +20,8 @@ export default function EstimateForm() {
   const onFormSubmit = httpsCallable(functions, "onFormSubmit");
 
   const handleChange = (e) => {
+     console.log("handleChange:", e.target.name, e.target.value);
+
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setErrors({ ...errors, [e.target.name]: "" });
   };
@@ -38,6 +40,8 @@ export default function EstimateForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("🔔 handleSubmit fired");
+
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length) {
       setErrors(validationErrors);
@@ -86,7 +90,7 @@ export default function EstimateForm() {
       <main className="main-content">
         <section className="form-container">
           <h2>Get a Free Estimate</h2>
-          <form onSubmit={handleSubmit}>
+          <form onSubmit={handleSubmit} noValidate>
             <label>
               Name:
               <input
@@ -138,7 +142,6 @@ export default function EstimateForm() {
                 onChange={handleChange}
                 maxLength={3000}
                 placeholder="Please provide details about your tree service needs."
-                required
               />
             </label>
 
@@ -148,14 +151,6 @@ export default function EstimateForm() {
             >
               {isLoading ? "Submitting..." : "Submit"}
             </button>
-
-            <input type="text" name="_gotcha" style={{ display: "none" }} />
-            <input type="hidden" name="_next" value="/thank-you" />
-            <input
-              type="hidden"
-              name="_subject"
-              value="New Tree Service Quote Request"
-            />
           </form>
 
           {status === "SUCCESS" && (
