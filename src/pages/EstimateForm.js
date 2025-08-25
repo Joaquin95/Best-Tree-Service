@@ -7,6 +7,8 @@ import { getAnalytics, logEvent } from "firebase/analytics";
 
 export default function EstimateForm() {
   const recaptchaRef = useRef(null);
+  const navigate = useNavigate();
+  const onFormSubmit = httpsCallable(functions, "onFormSubmit");
 
   const [formData, setFormData] = useState({
     name: "",
@@ -19,9 +21,6 @@ export default function EstimateForm() {
   const [status, setStatus] = useState("");
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-
-  const navigate = useNavigate();
-  const onFormSubmit = httpsCallable(functions, "onFormSubmit");
 
   const handleChange = (e) => {
     console.log("handleChange:", e.target.name, e.target.value);
@@ -61,11 +60,12 @@ export default function EstimateForm() {
     } catch (err) {
       console.warn("Analytics not initialized:", err);
     }
-    const token = await recaptchaRef.current.executeAsync();
-    recaptchaRef.current.reset();
-    console.log("reCAPTCHA token:", token);
 
     try {
+      const token = await recaptchaRef.current.executeAsync();
+      recaptchaRef.current.reset();
+      console.log("reCAPTCHA token:", token);
+
       const { data } = await onFormSubmit({
         ...formData,
         recaptchaToken: token,
@@ -97,6 +97,7 @@ export default function EstimateForm() {
       setIsLoading(false);
     }
   };
+ const siteKey = process.env.REACT_APP_RECAPTCHA_SITEKEY;
 
   return (
     <div className="page-wrapper">
@@ -162,11 +163,14 @@ export default function EstimateForm() {
               {isLoading ? "Submitting..." : "Submit"}
             </button>
           </form>
-          <ReCAPTCHA
-            sitekey={process.env.REACT_APP_RECAPTCHA_SITEKEY}
-            size="invisible"
-            ref={recaptchaRef}
-          />
+            {siteKey ? (
+            <ReCAPTCHA sitekey={siteKey} size="invisible" ref={recaptchaRef} />
+          ) : (
+            <p className="error">
+              reCAPTCHA site key is missing. Please check your environment config.
+            </p>
+          )}
+
 
           {status === "SUCCESS" && (
             <p className="success">

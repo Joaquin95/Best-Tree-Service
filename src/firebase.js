@@ -17,8 +17,6 @@ const firebaseConfig = {
 
 
 const app = initializeApp(firebaseConfig);
-
-
 const functions = getFunctions(app, "us-central1");
 
 

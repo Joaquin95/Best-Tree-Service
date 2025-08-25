@@ -58,11 +58,16 @@ export default function Home() {
             <li>✅ Free Estimates & Transparent Pricing</li>
           </ul>
         </strong>
-<section className="featured-service">
-  <h2>Need a stump gone fast?</h2>
-  <p>We offer same-day stump grinding across DFW. Clean, safe, and affordable.</p>
-  <a href="/services#stump-grinding" className="btn-primary">Learn More</a>
-</section>
+        <section className="featured-service">
+          <h2>Need a stump gone fast?</h2>
+          <p>
+            We offer same-day stump grinding across DFW. Clean, safe, and
+            affordable.
+          </p>
+          <a href="/services#stump-grinding" className="btn-primary">
+            Learn More
+          </a>
+        </section>
 
         <section id="contact" className="contact-section">
           <h2>Client Testimonials</h2>
