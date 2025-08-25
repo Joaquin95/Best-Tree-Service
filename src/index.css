@@ -652,3 +652,21 @@ h2 {
     height: 300px;
   }
 }
+
+.btn {
+  transition: background 0.2s, transform 0.2s;
+}
+.btn-loading {
+  background: #ccc;
+  cursor: not-allowed;
+  transform: scale(0.98);
+}
+
+.success {
+  opacity: 0;
+  animation: fadeIn 0.5s forwards ease-out 0.3s;
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}

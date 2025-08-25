@@ -1,10 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { functions } from "../firebase";
+import ReCAPTCHA from "react-google-recaptcha";
 import { httpsCallable } from "firebase/functions";
 import { getAnalytics, logEvent } from "firebase/analytics";
 
 export default function EstimateForm() {
+  const recaptchaRef = useRef(null);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -16,31 +19,31 @@ export default function EstimateForm() {
   const [status, setStatus] = useState("");
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+
   const navigate = useNavigate();
   const onFormSubmit = httpsCallable(functions, "onFormSubmit");
 
   const handleChange = (e) => {
-     console.log("handleChange:", e.target.name, e.target.value);
-
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: "" });
+    console.log("handleChange:", e.target.name, e.target.value);
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setErrors((prev) => ({ ...prev, [name]: "" }));
   };
 
   const validateForm = () => {
-    const newErrors = {};
-    if (!formData.name.trim()) newErrors.name = "Name is required";
-    if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = "Invalid email";
-    if (!formData.address.trim() || formData.address.length < 5) {
-      newErrors.address = "Enter a valid address";
-    }
-    if (!/^\d{10}$/.test(formData.phone))
-      newErrors.phone = "Enter 10-digit phone";
-    return newErrors;
+    const newErr = {};
+    if (!formData.name.trim()) newErr.name = "Name is required";
+    if (!/\S+@\S+\.\S+/.test(formData.email)) newErr.email = "Invalid email";
+    if (!/^\d{10}$/.test(formData.phone)) newErr.phone = "Enter 10-digit phone";
+    if (!formData.address.trim() || formData.address.length < 5)
+      newErr.address = "Enter a valid address";
+    return newErr;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log("🔔 handleSubmit fired");
+    setStatus("");
 
     const validationErrors = validateForm();
     if (Object.keys(validationErrors).length) {
@@ -48,22 +51,32 @@ export default function EstimateForm() {
       return;
     }
     setIsLoading(true);
-    const analytics = getAnalytics();
-    logEvent(analytics, "form_submit", {
-      category: "lead_generation",
-      label: "EstimateForm",
-    });
 
     try {
-      const result = await onFormSubmit(formData);
-      console.log("Firebase result:", result.data);
+      const analytics = getAnalytics();
+      logEvent(analytics, "form_submit", {
+        category: "lead_generation",
+        label: "EstimateForm",
+      });
+    } catch (err) {
+      console.warn("Analytics not initialized:", err);
+    }
+    const token = await recaptchaRef.current.executeAsync();
+    recaptchaRef.current.reset();
+    console.log("reCAPTCHA token:", token);
 
+    try {
+      const { data } = await onFormSubmit({
+        ...formData,
+        recaptchaToken: token,
+      });
+      console.log("Firebase result:", data);
       setStatus("SUCCESS");
+
       if (window.gtag) {
-        const pagePath = window.location.pathname;
         window.gtag("event", "form_submit", {
           event_category: "lead_generation",
-          event_label: `EstimateForm - ${pagePath}`,
+          event_label: `EstimateForm - ${window.location.pathname}`,
           value: 1,
         });
       }
@@ -145,13 +158,15 @@ export default function EstimateForm() {
               />
             </label>
 
-            <button
-              type="submit"
-              disabled={isLoading}
-            >
+            <button type="submit" disabled={isLoading}>
               {isLoading ? "Submitting..." : "Submit"}
             </button>
           </form>
+          <ReCAPTCHA
+            sitekey={process.env.REACT_APP_RECAPTCHA_SITEKEY}
+            size="invisible"
+            ref={recaptchaRef}
+          />
 
           {status === "SUCCESS" && (
             <p className="success">
