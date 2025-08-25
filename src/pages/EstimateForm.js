@@ -44,11 +44,12 @@ export default function EstimateForm() {
     console.log("🔔 handleSubmit fired");
     setStatus("");
 
-    const validationErrors = validateForm();
-    if (Object.keys(validationErrors).length) {
-      setErrors(validationErrors);
+    const errs = validateForm();
+    if (Object.keys(errs).length) {
+      setErrors(errs);
       return;
     }
+
     setIsLoading(true);
 
     try {
@@ -68,7 +69,6 @@ export default function EstimateForm() {
     }
 
     let token;
-
     try {
       token = await recaptchaRef.current.executeAsync();
       recaptchaRef.current.reset();
@@ -119,49 +119,27 @@ export default function EstimateForm() {
         <section className="form-container">
           <h2>Get a Free Estimate</h2>
           <form onSubmit={handleSubmit} noValidate>
-            <label>
-              Name:
-              <input
-                type="text"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-              />
-              {errors.name && <span className="error">{errors.name}</span>}
-            </label>
-            <label>
-              Email:
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-              />
-              {errors.email && <span className="error">{errors.email}</span>}
-            </label>
-            <label>
-              Phone Number:
-              <input
-                type="tel"
-                name="phone"
-                value={formData.phone}
-                onChange={handleChange}
-                required
-              />
-              {errors.phone && <span className="error">{errors.phone}</span>}
-            </label>
-            <label>
-              Address:
-              <input
-                type="text"
-                name="address"
-                value={formData.address}
-                onChange={handleChange}
-                required
-              />
-            </label>
+            {["name", "email", "phone", "address"].map((field) => (
+              <label key={field}>
+                {field.charAt(0).toUpperCase() + field.slice(1)}:
+                <input
+                  type={
+                    field === "email"
+                      ? "email"
+                      : field === "phone"
+                      ? "tel"
+                      : "text"
+                  }
+                  name={field}
+                  value={formData[field]}
+                  onChange={handleChange}
+                  required
+                />
+                {errors[field] && (
+                  <span className="error">{errors[field]}</span>
+                )}
+              </label>
+            ))}
             <label>
               Message:
               <textarea
