@@ -4,6 +4,9 @@ import { onCall } from "firebase-functions/v2/https";
 import { logger } from "firebase-functions";
 import { initializeApp } from "firebase-admin/app";
 import sgMail from "@sendgrid/mail";
+import cors from 'cors';
+
+const corsHandler = cors({  origin: ['https://best-tree-service.vercel.app'] });
 
 initializeApp();
 
