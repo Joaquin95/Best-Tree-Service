@@ -1,37 +1,46 @@
-import * as functions from "firebase-functions";
-import sgMail from "@sendgrid/mail";
+import 'dotenv/config';
+import { onCall } from 'firebase-functions/v2/https';
+import { logger } from 'firebase-functions';
+import { initializeApp } from 'firebase-admin/app';
+import sgMail from '@sendgrid/mail';
 
 
-const { apikey, sms_gateway } = functions.config().sendgrid || {};
+initializeApp();
 
-if (!apikey || !sms_gateway) {
-  functions.logger.error("Missing SENDGRID config", { apikey, sms_gateway });
-  throw new Error(
-    'Run: firebase functions:config:set sendgrid.apikey="…" sendgrid.sms_gateway="…"'
-  );
-}
+export const onFormSubmit = onCall(
+  {
+    region: 'us-central1',
+    timeoutSeconds: 60,
+    memory: '256MB',
+    secrets: ['SENDGRID_APIKEY', 'SENDGRID_SMS_GATEWAY']
+  },
+  async (data, context) => {
+    const APIKEY = process.env.SENDGRID_APIKEY;
+    const SMS_GATEWAY = process.env.SENDGRID_SMS_GATEWAY;
 
-sgMail.setApiKey(apikey);
+    if (!APIKEY || !SMS_GATEWAY) {
+      logger.error('Missing SendGrid secrets', {
+        SENDGRID_APIKEY: Boolean(APIKEY),
+        SENDGRID_SMS_GATEWAY: Boolean(SMS_GATEWAY)
+      });
+      throw new Error('SendGrid credentials not found in secrets');
+    }
 
-export const onFormSubmit = functions
-  .region("us-central1")
-  .runWith({ timeoutSeconds: 60 })
-  .https.onCall(async (data, context) => {
-    functions.logger.info("Form submission received", { data, uid: context.auth?.uid });
-
-    const msg = {
-      to: sms_gateway,
-      from: "Mintinvestments95@gmail.com",
-      subject: "New Lead from Website",
-      text: `New lead data:\n${JSON.stringify(data, null, 2)}`,
-    };
+    sgMail.setApiKey(APIKEY);
+    logger.info('Form submission received', { data, uid: context.auth?.uid });
 
     try {
-      await sgMail.send(msg);
-      functions.logger.info("Email sent");
-      return { status: "success" };
+      await sgMail.send({
+        to: SMS_GATEWAY,
+        from: 'Mintinvestments95@gmail.com',
+        subject: 'New Estimate quote J.M',
+        text: `New Estimate quote J.M:\n${JSON.stringify(data, null, 2)}`
+      });
+      logger.info('SendGrid message sent successfully');
+      return { status: 'success' };
     } catch (err) {
-      functions.logger.error("SendGrid error", err);
-      throw new functions.https.HttpsError("internal", "Email delivery failed");
+      logger.error('SendGrid error', err);
+      throw new Error('Notification failed');
     }
-  });
+  }
+);
