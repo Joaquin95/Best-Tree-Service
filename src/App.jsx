@@ -12,6 +12,8 @@ import StumpGrinding from "./pages/StumpGrinding";
 import TreeTrimming from "./pages/TreeTrimming";
 import Services from "./pages/Services";
 import Gallery from "./pages/Gallery";
+import ServiceArea from "./pages/ServiceArea";
+
 
 ReactGA.initialize("G-7WL7RH72E5");
 
@@ -28,6 +30,8 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/tree-removal" element={<TreeRemoval />} />
           <Route path="/estimate" element={<EstimateForm />} />
+          <Route path="/service-area" element={<ServiceArea />} />
+
           <Route path="/stump-grinding" element={<StumpGrinding />} />
           <Route path="/tree-trimming" element={<TreeTrimming />} />
           <Route path="/gallery" element={<Gallery />} />

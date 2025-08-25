@@ -30,7 +30,6 @@ html {
   max-width: 1200px;
   box-shadow: 0 4px 12px rgba(0, 70, 0, 100.45);
   text-align: center;
-
 }
 .hero-section p {
   margin-bottom: 1rem;
@@ -355,7 +354,7 @@ textarea::placeholder {
   color: whitesmoke;
   text-decoration: underline;
 }
-.contact-section  p {
+.contact-section p {
   color: whitesmoke;
 }
 .testimonials blockquote p {
@@ -404,12 +403,11 @@ textarea::placeholder {
   max-width: 1200px;
   box-shadow: 0 4px 12px rgba(0, 70, 0, 100.45);
   text-align: center;
-  
 }
 
-.trust-section, h2 {
+.trust-section,
+h2 {
   text-decoration: underline;
-  
 }
 
 .trust-list {
@@ -429,10 +427,11 @@ textarea::placeholder {
   padding: 1.5rem 0;
   text-align: center;
   margin-top: 40px;
+   color: white;
 }
 
-.footer a {
-  color: #66a27e;
+.footer p {
+  color: white;
   margin: 0 5px;
   text-decoration: none;
 }
@@ -452,13 +451,6 @@ textarea::placeholder {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-}
-
-footer {
-  background-color: #333;
-  color: white;
-  padding: 1rem;
-  text-align: center;
 }
 .main-content {
   flex: 1;
@@ -485,14 +477,14 @@ footer {
   text-align: center;
   padding: 2rem;
 }
-.services-hero h1{
-color: white;
-text-decoration: underline;
+.services-hero h1 {
+  color: white;
+  text-decoration: underline;
 }
-.services-hero p{
-color: white;
-font-size: 1.2rem;
-margin-top: 1rem;
+.services-hero p {
+  color: white;
+  font-size: 1.2rem;
+  margin-top: 1rem;
 }
 .services-grid {
   display: grid;
@@ -561,6 +553,7 @@ margin-top: 1rem;
 .h3 {
   color: black;
 }
+/* Featured Service Section */
 .featured-service {
   max-width: 1000px;
   margin: 3rem auto;
@@ -572,9 +565,8 @@ margin-top: 1rem;
   max-width: 1200px;
   box-shadow: 0 4px 12px rgba(0, 70, 0, 100.45);
   text-align: center;
-  
 }
-.featured-service h2{
+.featured-service h2 {
   font-size: 2rem;
   margin-bottom: 1rem;
   color: whitesmoke;
@@ -582,4 +574,81 @@ margin-top: 1rem;
 }
 .featured-service p {
   color: whitesmoke;
+}
+/* Services Area Page */
+.hero service-area-hero {
+  max-width: 1000px;
+  margin: 3rem auto;
+  padding: 2rem;
+  text-align: center;
+  color: white;
+  padding: 2.5rem;
+  margin: 40px auto;
+  max-width: 1200px;
+  box-shadow: 0 4px 12px rgba(0, 70, 0, 100.45);
+  text-align: center;
+}
+.section-title {
+  text-align: center;
+  color: white;
+}
+.content-wrapper {
+  text-align: left;
+  color: white;
+}
+.content-wrapper p {
+  text-align: center;
+  color: white;
+}
+.content-wrapper h1 {
+  text-align: center;
+  color: white;
+}
+/* Map and Form Section */
+.map-form-container {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+}
+.service-areas-grid .grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+.area-card {
+  background: #006936;
+  padding: 1rem;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.88);
+  cursor: pointer;
+  cursor: hover;
+  transition: transform 0.2s ease;
+}
+.map-form-section .content-wrapper {
+  max-width: none;
+  width: auto;
+
+  padding: 2rem;
+}
+
+
+/* Right column is a fixed square */
+.map-container {
+  flex-shrink: 0;
+  width: 400px;
+  height: 400px;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Responsive breakpoint: stack vertically on narrow screens */
+@media (max-width: 768px) {
+  .map-form-container {
+    flex-direction: column;
+  }
+  .map-container {
+    width: 100%;
+    height: 300px;
+  }
 }

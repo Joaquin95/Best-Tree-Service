@@ -56,9 +56,8 @@ export default function Navbar() {
               </Link>
             </li>
             <li>
-              <a href="#service-area" onClick={() => setIsOpen(false)}>
-                Service Area
-              </a>
+             <Link to="/service-area"  onClick={() => setIsOpen(false)}>Service Area</Link>
+
             </li>
             <li>
               <Link to="/gallery" onClick={() => setIsOpen(false)}>
