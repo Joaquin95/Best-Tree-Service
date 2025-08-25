@@ -14,13 +14,13 @@ export default function InlineEstimateForm({ onSuccess }) {
     address: "",
     message: "",
   });
-  const [status, setStatus] = useState("");
   const [errors, setErrors] = useState({});
+  const [status, setStatus] = useState("");     // "", "SUCCESS", or "ERROR"
   const [isLoading, setIsLoading] = useState(false);
 
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setErrors({ ...errors, [e.target.name]: "" });
+    setFormData((f) => ({ ...f, [e.target.name]: e.target.value }));
+    setErrors((errs) => ({ ...errs, [e.target.name]: "" }));
   };
 
   const validateForm = () => {
@@ -45,12 +45,15 @@ export default function InlineEstimateForm({ onSuccess }) {
     }
     setIsLoading(true);
 
+    // Guard reCAPTCHA
     if (!recaptchaRef.current) {
       console.error("reCAPTCHA not initialized");
       setStatus("ERROR");
       setIsLoading(false);
       return;
     }
+
+    // Execute reCAPTCHA
     let token;
     try {
       token = await recaptchaRef.current.executeAsync();
@@ -95,9 +98,7 @@ export default function InlineEstimateForm({ onSuccess }) {
           <label key={field}>
             {field.charAt(0).toUpperCase() + field.slice(1)}:
             <input
-              type={
-                field === "email" ? "email" : field === "phone" ? "tel" : "text"
-              }
+              type={field === "email" ? "email" : field === "phone" ? "tel" : "text"}
               name={field}
               value={formData[field]}
               onChange={handleChange}

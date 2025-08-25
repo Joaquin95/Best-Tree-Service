@@ -32,7 +32,6 @@ function App() {
           <Route path="/tree-removal" element={<TreeRemoval />} />
           <Route path="/estimate" element={<EstimateForm />} />
           <Route path="/service-area" element={<ServiceArea />} />
-
           <Route path="/stump-grinding" element={<StumpGrinding />} />
           <Route path="/tree-trimming" element={<TreeTrimming />} />
           <Route path="/gallery" element={<Gallery />} />
