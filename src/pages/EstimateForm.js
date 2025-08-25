@@ -60,12 +60,26 @@ export default function EstimateForm() {
     } catch (err) {
       console.warn("Analytics not initialized:", err);
     }
+    if (!recaptchaRef.current) {
+      console.error("reCAPTCHA not initialized");
+      setStatus("ERROR");
+      setIsLoading(false);
+      return;
+    }
+
+    let token;
 
     try {
-      const token = await recaptchaRef.current.executeAsync();
+      token = await recaptchaRef.current.executeAsync();
       recaptchaRef.current.reset();
       console.log("reCAPTCHA token:", token);
-
+    } catch (err) {
+      console.error("reCAPTCHA execution failed:", err);
+      setStatus("ERROR");
+      setIsLoading(false);
+      return;
+    }
+    try {
       const { data } = await onFormSubmit({
         ...formData,
         recaptchaToken: token,
@@ -97,7 +111,7 @@ export default function EstimateForm() {
       setIsLoading(false);
     }
   };
- const siteKey = process.env.REACT_APP_RECAPTCHA_SITEKEY;
+  const siteKey = process.env.REACT_APP_RECAPTCHA_SITEKEY;
 
   return (
     <div className="page-wrapper">
@@ -163,14 +177,14 @@ export default function EstimateForm() {
               {isLoading ? "Submitting..." : "Submit"}
             </button>
           </form>
-            {siteKey ? (
+          {siteKey ? (
             <ReCAPTCHA sitekey={siteKey} size="invisible" ref={recaptchaRef} />
           ) : (
             <p className="error">
-              reCAPTCHA site key is missing. Please check your environment config.
+              reCAPTCHA site key is missing. Please check your environment
+              config.
             </p>
           )}
-
 
           {status === "SUCCESS" && (
             <p className="success">

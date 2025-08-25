@@ -28,9 +28,9 @@ export default function Services() {
             We specialize in tree trimming, removal, stump grinding, and
             emergency response. Whether you're a homeowner or a commercial
             property manager, our team ensures your trees are healthy and your
-            property is safe serving Dallas, Mesquite, Garland, and all surrounding
-            areas, we’re proud to be your go-to team for safe, professional tree
-            care.
+            property is safe serving Dallas, Mesquite, Garland, and all
+            surrounding areas, we’re proud to be your go-to team for safe,
+            professional tree care.
           </strong>
         </p>
       </section>
@@ -49,13 +49,12 @@ export default function Services() {
                 : "Expert care tailored to your tree’s needs."}
             </p>
           </div>
-
         ))}
       </section>
-               <StumpGrinding />
+      <StumpGrinding />
       <TreeRemoval />
       <TreeTrimming />
-        <EstimateForm />
+      <EstimateForm />
       <Footer />
     </main>
   );

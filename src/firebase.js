@@ -1,28 +1,39 @@
 import { initializeApp } from "firebase/app";
-import {
-  getFunctions,
-  connectFunctionsEmulator
-} from "firebase/functions";
+import { getFunctions} from "firebase/functions";
 
+if (!process.env.REACT_APP_FIREBASE_API_KEY) {
+  throw new Error("Missing Firebase API key in .env");
+}
+if (!process.env.REACT_APP_FIREBASE_AUTH_DOMAIN) {
+  throw new Error("Missing Firebase auth domain in .env");
+}
+if (!process.env.REACT_APP_FIREBASE_PROJECT_ID) {
+  throw new Error("Missing Firebase project ID in .env");   
+}
+if (!process.env.REACT_APP_FIREBASE_STORAGE_BUCKET) { 
+  throw new Error("Missing Firebase storage bucket in .env");
+}
+if (!process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID) {
+  throw new Error("Missing Firebase messaging sender ID in .env");
+}
+if (!process.env.REACT_APP_FIREBASE_APP_ID) {
+  throw new Error("Missing Firebase app ID in .env");
+}
+if (!process.env.REACT_APP_FIREBASE_MEASUREMENT_ID) {
+  throw new Error("Missing Firebase measurement ID in .env");
+}
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-  authDomain: "best-tree-service-a1029.firebaseapp.com",
-  projectId: "best-tree-service-a1029",
-  storageBucket: "best-tree-service-a1029.appspot.com",
-  messagingSenderId: "560778312218",
-  appId: "1:560778312218:web:9fac7624783d1ae56bafa3",
-  measurementId: "G-D8XD4CHBRB"
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
-
 
 const app = initializeApp(firebaseConfig);
 const functions = getFunctions(app, "us-central1");
-
-
-if (window.location.hostname === "localhost") {
-  connectFunctionsEmulator(functions, "localhost", 5001);
-}
-
 
 export { functions };

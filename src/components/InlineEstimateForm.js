@@ -1,8 +1,12 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { functions } from "../firebase";
 import { httpsCallable } from "firebase/functions";
+import ReCAPTCHA from "react-google-recaptcha";
 
 export default function InlineEstimateForm({ onSuccess }) {
+  const recaptchaRef = useRef(null);
+  const onFormSubmit = httpsCallable(functions, "onFormSubmit");
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -56,10 +60,22 @@ export default function InlineEstimateForm({ onSuccess }) {
     setStatus("");
 
     try {
-      const onFormSubmit = httpsCallable(functions, "onFormSubmit");
-      const res = await onFormSubmit(formData);
-      console.log("Function result:", res.data);
+      const token = await recaptchaRef.current.executeAsync();
+      recaptchaRef.current.reset();
+      
+      if (!recaptchaRef.current) {
+        console.error("reCAPTCHA not initialized");
+        setStatus("ERROR");
+        setIsLoading(false);
+        return;
+      }
 
+      const res = await onFormSubmit({
+        ...formData,
+        recaptchaToken: token,
+      });
+
+      console.log("Function result:", res.data);
       setStatus("SUCCESS");
 
       if (window.gtag) {
@@ -131,6 +147,11 @@ export default function InlineEstimateForm({ onSuccess }) {
           <p className="error">Something went wrong. Try again.</p>
         )}
       </form>
+      <ReCAPTCHA
+        sitekey={process.env.REACT_APP_RECAPTCHA_SITEKEY}
+        size="invisible"
+        ref={recaptchaRef}
+      />
     </section>
   );
 }
