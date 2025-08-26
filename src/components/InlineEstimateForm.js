@@ -1,12 +1,10 @@
 import React, { useState, useRef } from "react";
-import { functions } from "../firebase";
-import { httpsCallable } from "firebase/functions";
 import ReCAPTCHA from "react-google-recaptcha";
+import { onFormSubmit } from "../firebaseFunctions";
+import { useNavigate } from "react-router-dom";
+import { getAnalytics, logEvent } from "firebase/analytics";
 
 export default function InlineEstimateForm({ onSuccess }) {
-  const recaptchaRef = useRef(null);
-  const onFormSubmit = httpsCallable(functions, "onFormSubmit");
-
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -15,22 +13,30 @@ export default function InlineEstimateForm({ onSuccess }) {
     message: "",
   });
   const [errors, setErrors] = useState({});
-  const [status, setStatus] = useState("");     // "", "SUCCESS", or "ERROR"
+  const [status, setStatus] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const recaptchaRef = useRef(null);
+  const navigate = useNavigate();
+  const analytics = getAnalytics();
+
   const handleChange = (e) => {
-    setFormData((f) => ({ ...f, [e.target.name]: e.target.value }));
-    setErrors((errs) => ({ ...errs, [e.target.name]: "" }));
+    const { name, value } = e.target;
+    setFormData((f) => ({ ...f, [name]: value }));
+    setErrors((errs) => ({ ...errs, [name]: "" }));
   };
 
   const validateForm = () => {
     const errs = {};
+    const digits = formData.phone.replace(/\D/g, "");
+
     if (!formData.name.trim()) errs.name = "Name is required";
     if (!/\S+@\S+\.\S+/.test(formData.email)) errs.email = "Invalid email";
-    if (formData.phone.replace(/\D/g, "").length !== 10)
+    if (digits.length !== 10) {
       errs.phone = "Enter a valid 10-digit phone number";
+    }
     if (!formData.address.trim() || formData.address.length < 5)
-      errs.address = "Enter a street address (min 5 chars) or 5-digit ZIP";
+      errs.address = "Enter a valid address";
     return errs;
   };
 
@@ -38,25 +44,25 @@ export default function InlineEstimateForm({ onSuccess }) {
     e.preventDefault();
     console.log("🔔 Inline handleSubmit fired");
     setStatus("");
-    const errs = validateForm();
-    if (Object.keys(errs).length) {
-      setErrors(errs);
+    setErrors({});
+
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors);
       return;
     }
-    setIsLoading(true);
 
-    // Guard reCAPTCHA
     if (!recaptchaRef.current) {
-      console.error("reCAPTCHA not initialized");
+      console.error("reCAPTCHA ref not ready");
       setStatus("ERROR");
-      setIsLoading(false);
       return;
     }
 
-    // Execute reCAPTCHA
+    setIsLoading(true);
     let token;
     try {
-      token = await recaptchaRef.current.executeAsync();
+      token = await recaptchaRef.current.execute();
+
       recaptchaRef.current.reset();
     } catch (err) {
       console.error("reCAPTCHA execution failed:", err);
@@ -65,21 +71,21 @@ export default function InlineEstimateForm({ onSuccess }) {
       return;
     }
 
-    // Call your Cloud Function
     try {
       const { data } = await onFormSubmit({
         ...formData,
         recaptchaToken: token,
       });
       console.log("Function result:", data);
-      setStatus("SUCCESS");
-      window.gtag?.("event", "form_submit", {
-        event_category: "lead_generation",
-        event_label: `InlineEstimateForm – ${window.location.pathname}`,
-        value: 1,
+      logEvent(analytics, "form_submit", {
+        form_type: "inline_estimate",
+        path: window.location.pathname,
       });
+
+      setStatus("SUCCESS");
       setFormData({ name: "", email: "", phone: "", address: "", message: "" });
       onSuccess?.();
+      navigate("/thank-you");
     } catch (err) {
       console.error("Submission error:", err);
       setStatus("ERROR");
@@ -98,7 +104,9 @@ export default function InlineEstimateForm({ onSuccess }) {
           <label key={field}>
             {field.charAt(0).toUpperCase() + field.slice(1)}:
             <input
-              type={field === "email" ? "email" : field === "phone" ? "tel" : "text"}
+              type={
+                field === "email" ? "email" : field === "phone" ? "tel" : "text"
+              }
               name={field}
               value={formData[field]}
               onChange={handleChange}

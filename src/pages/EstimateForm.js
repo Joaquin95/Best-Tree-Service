@@ -1,14 +1,12 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { functions } from "../firebase";
-import { httpsCallable } from "firebase/functions";
-import { getAnalytics, logEvent } from "firebase/analytics";
 import ReCAPTCHA from "react-google-recaptcha";
+import { getAnalytics, logEvent } from "firebase/analytics";
+import { onFormSubmit } from "../firebase";
 
 export default function EstimateForm() {
-  const navigate = useNavigate();
   const recaptchaRef = useRef(null);
-  const onFormSubmit = httpsCallable(functions, "onFormSubmit");
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     name: "",
@@ -18,23 +16,28 @@ export default function EstimateForm() {
     message: "",
   });
   const [errors, setErrors] = useState({});
-  const [status, setStatus] = useState("");     // "", "SUCCESS", or "ERROR"
+  const [status, setStatus] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+
+  const validateForm = () => {
+    const errs = {};
+    const digits = formData.phone.replace(/\D/g, "");
+
+    if (!formData.name.trim()) errs.name = "Name is required";
+    if (!/\S+@\S+\.\S+/.test(formData.email)) errs.email = "Invalid email";
+    if (digits.length !== 10) {
+      errs.phone = "Enter a valid 10-digit phone number";
+    }
+
+    if (!formData.address.trim() || formData.address.length < 5)
+      errs.address = "Enter a valid address";
+    return errs;
+  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
     setErrors((prev) => ({ ...prev, [name]: "" }));
-  };
-
-  const validateForm = () => {
-    const errs = {};
-    if (!formData.name.trim()) errs.name = "Name is required";
-    if (!/\S+@\S+\.\S+/.test(formData.email)) errs.email = "Invalid email";
-    if (!/^\d{10}$/.test(formData.phone)) errs.phone = "Enter 10-digit phone";
-    if (!formData.address.trim() || formData.address.length < 5)
-      errs.address = "Enter a valid address";
-    return errs;
   };
 
   const handleSubmit = async (e) => {
@@ -45,10 +48,10 @@ export default function EstimateForm() {
       setErrors(errs);
       return;
     }
+    if (isLoading) return;
 
     setIsLoading(true);
 
-    // Fire analytics event if available
     try {
       const analytics = getAnalytics();
       logEvent(analytics, "form_submit", {
@@ -59,7 +62,6 @@ export default function EstimateForm() {
       console.warn("Analytics not initialized:", err);
     }
 
-    // Guard reCAPTCHA
     if (!recaptchaRef.current) {
       console.error("reCAPTCHA not initialized");
       setStatus("ERROR");
@@ -67,7 +69,6 @@ export default function EstimateForm() {
       return;
     }
 
-    // Execute reCAPTCHA
     let token;
     try {
       token = await recaptchaRef.current.executeAsync();
@@ -79,7 +80,6 @@ export default function EstimateForm() {
       return;
     }
 
-    // Call your Cloud Function
     try {
       const { data } = await onFormSubmit({
         ...formData,
@@ -114,19 +114,52 @@ export default function EstimateForm() {
         <section className="form-container">
           <h2>Get a Free Estimate</h2>
           <form onSubmit={handleSubmit} noValidate>
-            {["name", "email", "phone", "address"].map((field) => (
-              <label key={field}>
-                {field.charAt(0).toUpperCase() + field.slice(1)}:
-                <input
-                  type={field === "email" ? "email" : field === "phone" ? "tel" : "text"}
-                  name={field}
-                  value={formData[field]}
-                  onChange={handleChange}
-                  required
-                />
-                {errors[field] && <span className="error">{errors[field]}</span>}
-              </label>
-            ))}
+            <label>
+              Name:
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+              {errors.name && <span className="error">{errors.name}</span>}
+            </label>
+            <label>
+              Email:
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+              {errors.email && <span className="error">{errors.email}</span>}
+            </label>
+            <label>
+              Phone Number:
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                required
+              />
+              {errors.phone && <span className="error">{errors.phone}</span>}
+            </label>
+            <label>
+              Address:
+              <input
+                type="text"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                required
+              />
+              {errors.address && (
+                <span className="error">{errors.address}</span>
+              )}
+            </label>
             <label>
               Message:
               <textarea
@@ -137,25 +170,22 @@ export default function EstimateForm() {
                 placeholder="Please provide details about your tree service needs."
               />
             </label>
+            <ReCAPTCHA sitekey={siteKey} size="invisible" ref={recaptchaRef} />
 
             <button type="submit" disabled={isLoading}>
-              {isLoading ? "Submitting…" : "Submit"}
+              {isLoading ? "Submitting…" : "Get Estimate"}
             </button>
           </form>
 
-          {siteKey ? (
-            <ReCAPTCHA sitekey={siteKey} size="invisible" ref={recaptchaRef} />
-          ) : (
-            <p className="error">
-              reCAPTCHA site key is missing. Please check your environment config.
+          {status === "SUCCESS" && (
+            <p className="success">
+              We will contact you shortly to discuss your needs.
             </p>
           )}
-
-          {status === "SUCCESS" && (
-            <p className="success">We will contact you shortly to discuss your needs.</p>
-          )}
           {status === "ERROR" && (
-            <p className="error">Oops! Something went wrong. Please try again.</p>
+            <p className="error">
+              Oops! Something went wrong. Please try again.
+            </p>
           )}
         </section>
       </main>

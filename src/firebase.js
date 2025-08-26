@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
-import { getFunctions} from "firebase/functions";
+import { getFunctions, httpsCallable } from "firebase/functions";
+import { getAnalytics } from "firebase/analytics";
 
 if (!process.env.REACT_APP_FIREBASE_API_KEY) {
   throw new Error("Missing Firebase API key in .env");
@@ -8,9 +9,9 @@ if (!process.env.REACT_APP_FIREBASE_AUTH_DOMAIN) {
   throw new Error("Missing Firebase auth domain in .env");
 }
 if (!process.env.REACT_APP_FIREBASE_PROJECT_ID) {
-  throw new Error("Missing Firebase project ID in .env");   
+  throw new Error("Missing Firebase project ID in .env");
 }
-if (!process.env.REACT_APP_FIREBASE_STORAGE_BUCKET) { 
+if (!process.env.REACT_APP_FIREBASE_STORAGE_BUCKET) {
   throw new Error("Missing Firebase storage bucket in .env");
 }
 if (!process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID) {
@@ -32,8 +33,12 @@ const firebaseConfig = {
   appId: process.env.REACT_APP_FIREBASE_APP_ID,
   measurementId: process.env.REACT_APP_FIREBASE_MEASUREMENT_ID,
 };
+if (!firebaseConfig.apiKey) {
+  throw new Error("Missing Firebase config in .env");
+}
 
 const app = initializeApp(firebaseConfig);
 const functions = getFunctions(app, "us-central1");
 
-export { functions };
+export const analytics = getAnalytics(app);
+export const onFormSubmit = httpsCallable(functions, "onFormSubmit");
