@@ -1,7 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFunctions, httpsCallable } from "firebase/functions";
-
-
+import { getAnalytics} from "firebase/functions";
 
 const firebaseConfig = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -14,8 +12,6 @@ const firebaseConfig = {
 };
 
 
-
-
 if (!firebaseConfig.apiKey) {
   throw new Error(
     "Missing Firebase API key. Check your REACT_APP_FIREBASE_API_KEY in .env"
@@ -23,9 +19,5 @@ if (!firebaseConfig.apiKey) {
 }
 
 const app = initializeApp(firebaseConfig);
+export const analytics = getAnalytics(app);
 
-
-export const functions = getFunctions(app);
-
-
-export const onFormSubmit = httpsCallable(functions, "onFormSubmit");

@@ -1,8 +1,6 @@
 import React, { useState, useRef } from "react";
 import ReCAPTCHA from "react-google-recaptcha";
-import { onFormSubmit } from "../firebaseFunctions";
 import { useNavigate } from "react-router-dom";
-import { getAnalytics, logEvent } from "firebase/analytics";
 
 export default function InlineEstimateForm({ onSuccess }) {
   const [formData, setFormData] = useState({
@@ -18,7 +16,6 @@ export default function InlineEstimateForm({ onSuccess }) {
 
   const recaptchaRef = useRef(null);
   const navigate = useNavigate();
-  const analytics = getAnalytics();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -61,8 +58,8 @@ export default function InlineEstimateForm({ onSuccess }) {
     setIsLoading(true);
     let token;
     try {
-      token = await recaptchaRef.current.execute();
-
+      token = await recaptchaRef.current.executeAsync();
+      console.log("💡 reCAPTCHA token:", token); 
       recaptchaRef.current.reset();
     } catch (err) {
       console.error("reCAPTCHA execution failed:", err);
@@ -72,22 +69,53 @@ export default function InlineEstimateForm({ onSuccess }) {
     }
 
     try {
-      const { data } = await onFormSubmit({
-        ...formData,
-        recaptchaToken: token,
-      });
-      console.log("Function result:", data);
-      logEvent(analytics, "form_submit", {
-        form_type: "inline_estimate",
-        path: window.location.pathname,
-      });
+      const response = await fetch(
+        "https://us-central1-best-tree-service-a1029.cloudfunctions.net/onFormSubmit",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...formData,
+            recaptchaToken: token,
+          }),
+        }
+      );
 
-      setStatus("SUCCESS");
-      setFormData({ name: "", email: "", phone: "", address: "", message: "" });
-      onSuccess?.();
-      navigate("/thank-you");
+      const result = await response.json();
+
+      if (response.ok && result.status === "success") {
+        console.log("Function result:", result);
+        setStatus("SUCCESS");
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          address: "",
+          message: "",
+        });
+
+        const goThankYou = () => {
+          onSuccess?.();
+          navigate("/thank-you");
+        };
+        if (window.gtag) {
+          window.gtag("event", "form_submit", {
+            event_category: "lead_generation",
+            event_label: `EstimateForm – ${window.location.pathname}`,
+            value: 1,
+            event_callback: goThankYou,
+          });
+          setTimeout(goThankYou, 3000);
+        } else {
+          goThankYou();
+        }
+      } else {
+        throw new Error(result.error || "Submission failed");
+      }
     } catch (err) {
-      console.error("Submission error:", err);
+      const safeError =
+        err instanceof Error ? err : new Error("Unknown submission error");
+      console.error("Submission error:", safeError.message);
       setStatus("ERROR");
     } finally {
       setIsLoading(false);
@@ -97,55 +125,86 @@ export default function InlineEstimateForm({ onSuccess }) {
   const siteKey = process.env.REACT_APP_RECAPTCHA_SITEKEY;
 
   return (
-    <section id="estimate-form" className="form-container">
-      <h2>Get a Free Estimate</h2>
-      <form onSubmit={handleSubmit} noValidate>
-        {["name", "email", "phone", "address"].map((field) => (
-          <label key={field}>
-            {field.charAt(0).toUpperCase() + field.slice(1)}:
-            <input
-              type={
-                field === "email" ? "email" : field === "phone" ? "tel" : "text"
-              }
-              name={field}
-              value={formData[field]}
-              onChange={handleChange}
-              required
-            />
-            {errors[field] && <span className="error">{errors[field]}</span>}
-          </label>
-        ))}
+    <div className="page-wrapper">
+      <main className="main-content">
+        <section className="form-container">
+          <h2>Get a Free Estimate</h2>
+          <form onSubmit={handleSubmit} noValidate>
+            <label>
+              Name:
+              <input
+                type="text"
+                name="name"
+                value={formData.name}
+                onChange={handleChange}
+                required
+              />
+              {errors.name && <span className="error">{errors.name}</span>}
+            </label>
+            <label>
+              Email:
+              <input
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+              />
+              {errors.email && <span className="error">{errors.email}</span>}
+            </label>
+            <label>
+              Phone Number:
+              <input
+                type="tel"
+                name="phone"
+                value={formData.phone}
+                onChange={handleChange}
+                required
+              />
+              {errors.phone && <span className="error">{errors.phone}</span>}
+            </label>
+            <label>
+              Address:
+              <input
+                type="text"
+                name="address"
+                value={formData.address}
+                onChange={handleChange}
+                required
+              />
+              {errors.address && (
+                <span className="error">{errors.address}</span>
+              )}
+            </label>
+            <label>
+              Message:
+              <textarea
+                name="message"
+                value={formData.message}
+                onChange={handleChange}
+                maxLength={3000}
+                placeholder="Please provide details about your tree service needs."
+              />
+            </label>
+            <ReCAPTCHA sitekey={siteKey} size="invisible" ref={recaptchaRef} />
 
-        <label>
-          Message:
-          <textarea
-            name="message"
-            value={formData.message}
-            onChange={handleChange}
-            maxLength={3000}
-            placeholder="Please provide details about your tree service needs."
-          />
-        </label>
+            <button type="submit" disabled={isLoading}>
+              {isLoading ? "Submitting…" : "Get Estimate"}
+            </button>
+          </form>
 
-        <button type="submit" disabled={isLoading}>
-          {isLoading ? "Submitting…" : "Submit"}
-        </button>
-      </form>
-
-      {siteKey ? (
-        <ReCAPTCHA sitekey={siteKey} size="invisible" ref={recaptchaRef} />
-      ) : (
-        <p className="error">
-          reCAPTCHA site key is missing. Please check your environment config.
-        </p>
-      )}
-
-      {status === "SUCCESS" && (
-        <p className="success">We’ll contact you shortly.</p>
-      )}
-      {status === "ERROR" && (
-        <p className="error">Something went wrong. Try again.</p>
-      )}
-    </section>
+          {status === "SUCCESS" && (
+            <p className="success">
+              We will contact you shortly to discuss your needs.
+            </p>
+          )}
+          {status === "ERROR" && (
+            <p className="error">
+              Oops! Something went wrong. Please try again.
+            </p>
+          )}
+        </section>
+      </main>
+    </div>
   );
 }

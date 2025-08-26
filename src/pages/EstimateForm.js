@@ -2,7 +2,6 @@ import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
 import { getAnalytics, logEvent } from "firebase/analytics";
-import { onFormSubmit } from "../firebase";
 
 export default function EstimateForm() {
   const recaptchaRef = useRef(null);
@@ -81,31 +80,54 @@ export default function EstimateForm() {
     }
 
     try {
-      const { data } = await onFormSubmit({
-        ...formData,
-        recaptchaToken: token,
-      });
-      console.log("Function result:", data);
-      setStatus("SUCCESS");
+      const response = await fetch(
+        "https://us-central1-best-tree-service-a1029.cloudfunctions.net/onFormSubmit",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ ...formData, recaptchaToken: token }),
+        }
+      );
 
-      if (window.gtag) {
-        window.gtag("event", "form_submit", {
-          event_category: "lead_generation",
-          event_label: `EstimateForm – ${window.location.pathname}`,
-          value: 1,
+      const result = await response.json();
+
+      if (response.ok && result.status === "success") {
+        console.log("Function result:", result);
+        setStatus("SUCCESS");
+
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          address: "",
+          message: "",
         });
+
+        const goThankYou = () => navigate("/thank-you");
+
+        if (window.gtag) {
+          window.gtag("event", "form_submit", {
+            event_category: "lead_generation",
+            event_label: `EstimateForm – ${window.location.pathname}`,
+            value: 1,
+            event_callback: goThankYou,
+          });
+          setTimeout(goThankYou, 3000);
+        } else {
+          goThankYou();
+        }
+      } else {
+        throw new Error(result.error || "Submission failed");
       }
-
-      setFormData({ name: "", email: "", phone: "", address: "", message: "" });
-
-      setTimeout(() => navigate("/thank-you"), 1500);
     } catch (err) {
-     const safeError = err instanceof Error ? err : new Error("Unknown submission error");
-  console.error("Submission error:", safeError.message);
-  setStatus("ERROR");
-} finally {
-  setIsLoading(false);
-}
+      const safeError =
+        err instanceof Error ? err : new Error("Unknown submission error");
+      console.error("Submission error:", safeError.message);
+      setStatus("ERROR");
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const siteKey = process.env.REACT_APP_RECAPTCHA_SITEKEY;
 
@@ -192,5 +214,4 @@ export default function EstimateForm() {
       </main>
     </div>
   );
-  }
 }

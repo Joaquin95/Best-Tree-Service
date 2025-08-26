@@ -46,7 +46,7 @@ export const onFormSubmit = onRequest(
         { method: "POST" }
       );
       const vJson = await verify.json();
-      if (!vJson.success || vJson.score < 0.5) {
+      if (!vJson.success) {
         console.warn("reCAPTCHA failed", vJson);
         return res.status(403).json({ error: "reCAPTCHA failed" });
       }
