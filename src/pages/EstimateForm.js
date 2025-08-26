@@ -1,11 +1,9 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import ReCAPTCHA from "react-google-recaptcha";
 import { logEvent } from "firebase/analytics";
 import { analytics } from "../firebase";
 
 export default function EstimateForm({ onSuccess }) {
-  const recaptchaRef = useRef(null);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -51,7 +49,7 @@ export default function EstimateForm({ onSuccess }) {
 
     setIsLoading(true);
 
-  try {
+    try {
       if (analytics) {
         logEvent(analytics, "form_submit", {
           event_category: "lead_generation",
@@ -62,36 +60,15 @@ export default function EstimateForm({ onSuccess }) {
       console.warn("Analytics not initialized:", err);
     }
 
-
-    if (!recaptchaRef.current) {
-      console.error("reCAPTCHA not initialized");
-      setStatus("ERROR");
-      setIsLoading(false);
-      return;
-    }
-
-    let token;
-    try {
-      token = await recaptchaRef.current.executeAsync();
-      console.log("💡 reCAPTCHA token:", token);
-      recaptchaRef.current.reset();
-    } catch (err) {
-      console.error("reCAPTCHA execution failed:", err);
-      setStatus("ERROR");
-      setIsLoading(false);
-      return;
-    }
-
     try {
       const response = await fetch(
         "https://us-central1-best-tree-service-a1029.cloudfunctions.net/onFormSubmit",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...formData, token }),
+          body: JSON.stringify(formData),
         }
       );
-
       const result = await response.json();
 
       if (response.ok && result.status === "success") {
@@ -106,11 +83,10 @@ export default function EstimateForm({ onSuccess }) {
           message: "",
         });
 
-           const goThankYou = () => {
+        const goThankYou = () => {
           onSuccess?.();
           navigate("/thank-you");
         };
-
 
         if (window.gtag) {
           window.gtag("event", "form_submit", {
@@ -121,7 +97,7 @@ export default function EstimateForm({ onSuccess }) {
           });
           setTimeout(goThankYou, 3000);
         } else {
-            goThankYou();
+          goThankYou();
         }
       } else {
         throw new Error(result.error || "Submission failed");
@@ -133,10 +109,6 @@ export default function EstimateForm({ onSuccess }) {
       setIsLoading(false);
     }
   };
-
-
-  const siteKey = process.env.REACT_APP_RECAPTCHA_SITEKEY;
-  console.log("🔑 siteKey from estimate form :", siteKey);
 
   return (
     <div className="page-wrapper">
@@ -200,8 +172,6 @@ export default function EstimateForm({ onSuccess }) {
                 placeholder="Please provide details about your tree service needs."
               />
             </label>
-            <ReCAPTCHA sitekey={siteKey} size="invisible" ref={recaptchaRef} />
-
             <button type="submit" disabled={isLoading}>
               {isLoading ? "Submitting…" : "Get Estimate"}
             </button>

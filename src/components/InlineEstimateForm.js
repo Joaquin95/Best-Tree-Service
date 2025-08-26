@@ -1,8 +1,8 @@
 import React, { useState, useRef } from "react";
-import ReCAPTCHA from "react-google-recaptcha";
 import { useNavigate } from "react-router-dom";
 
 export default function InlineEstimateForm({ onSuccess }) {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -13,9 +13,6 @@ export default function InlineEstimateForm({ onSuccess }) {
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-
-  const recaptchaRef = useRef(null);
-  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -48,26 +45,9 @@ export default function InlineEstimateForm({ onSuccess }) {
       setErrors(validationErrors);
       return;
     }
-
-    if (!recaptchaRef.current) {
-      console.error("reCAPTCHA ref not ready");
-      setStatus("ERROR");
-      return;
-    }
+    if (isLoading) return;
 
     setIsLoading(true);
-
-    let token;
-    try {
-      token = await recaptchaRef.current.executeAsync();
-      console.log("💡 reCAPTCHA token:", token); 
-      recaptchaRef.current.reset();
-    } catch (err) {
-      console.error("reCAPTCHA execution failed:", err);
-      setStatus("ERROR");
-      setIsLoading(false);
-      return;
-    }
 
     try {
       const response = await fetch(
@@ -75,10 +55,7 @@ export default function InlineEstimateForm({ onSuccess }) {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            ...formData,
-           token,
-          }),
+          body: JSON.stringify(formData),
         }
       );
 
@@ -114,17 +91,12 @@ export default function InlineEstimateForm({ onSuccess }) {
         throw new Error(result.error || "Submission failed");
       }
     } catch (err) {
-      const safeError =
-        err instanceof Error ? err : new Error("Unknown submission error");
-      console.error("Submission error:", safeError.message);
+      console.error("Submission error:", err);
       setStatus("ERROR");
     } finally {
       setIsLoading(false);
     }
   };
-
-  const siteKey = process.env.REACT_APP_RECAPTCHA_SITEKEY;
-  console.log("🔑 siteKey from INLINE form:", siteKey);
 
   return (
     <div className="page-wrapper">
@@ -188,8 +160,7 @@ export default function InlineEstimateForm({ onSuccess }) {
                 placeholder="Please provide details about your tree service needs."
               />
             </label>
-            <ReCAPTCHA sitekey={siteKey} size="invisible" ref={recaptchaRef} />
-
+            
             <button type="submit" disabled={isLoading}>
               {isLoading ? "Submitting…" : "Get Estimate"}
             </button>
