@@ -97,14 +97,15 @@ export default function EstimateForm() {
       }
 
       setFormData({ name: "", email: "", phone: "", address: "", message: "" });
+
       setTimeout(() => navigate("/thank-you"), 1500);
     } catch (err) {
-      console.error("Submission error:", err);
-      setStatus("ERROR");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+     const safeError = err instanceof Error ? err : new Error("Unknown submission error");
+  console.error("Submission error:", safeError.message);
+  setStatus("ERROR");
+} finally {
+  setIsLoading(false);
+}
 
   const siteKey = process.env.REACT_APP_RECAPTCHA_SITEKEY;
 
@@ -191,4 +192,5 @@ export default function EstimateForm() {
       </main>
     </div>
   );
+  }
 }
