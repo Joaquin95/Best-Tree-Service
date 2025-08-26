@@ -2,8 +2,10 @@ import * as functions from "firebase-functions";
 import { initializeApp } from "firebase-admin/app";
 import fetch from "node-fetch";
 import sgMail from "@sendgrid/mail";
+import cors from "cors";
 
 initializeApp();
+const corsHandler = cors({ origin: true });
 
 export const onFormSubmit = functions.https.onCall(async (data, context) => {
   const APIKEY = process.env.SENDGRID_APIKEY;
