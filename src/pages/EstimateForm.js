@@ -8,6 +8,9 @@ export default function EstimateForm({ onSuccess }) {
   const recaptchaRef = useRef(null);
   const navigate = useNavigate();
 
+    const siteKey = process.env.REACT_APP_RECAPTCHA_SITEKEY;
+  console.log("🔑 siteKey from estimate form :", siteKey);
+  
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -68,18 +71,13 @@ export default function EstimateForm({ onSuccess }) {
       setIsLoading(false);
       return;
     }
+  recaptchaRef.current.execute();
+  };
 
-    let token;
-    try {
-      token = await recaptchaRef.current.executeAsync();
-      console.log("💡 reCAPTCHA token:", token);
-      recaptchaRef.current.reset();
-    } catch (err) {
-      console.error("reCAPTCHA execution failed:", err);
-      setStatus("ERROR");
-      setIsLoading(false);
-      return;
-    }
+    const onRecaptchaChange = async (token) => {
+    console.log("💡 reCAPTCHA token:", token);
+    recaptchaRef.current.reset();
+
 
     try {
       const response = await fetch(
@@ -132,8 +130,7 @@ export default function EstimateForm({ onSuccess }) {
     }
   };
 
-  const siteKey = process.env.REACT_APP_RECAPTCHA_SITEKEY;
-  console.log("🔑 siteKey from estimate form :", siteKey);
+
 
   return (
     <div className="page-wrapper">

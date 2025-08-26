@@ -3,6 +3,10 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { useNavigate } from "react-router-dom";
 
 export default function InlineEstimateForm({ onSuccess }) {
+
+    const siteKey = process.env.REACT_APP_RECAPTCHA_SITEKEY;
+  console.log("🔑 siteKey from INLINE form:", siteKey);
+  
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -57,17 +61,12 @@ export default function InlineEstimateForm({ onSuccess }) {
 
     setIsLoading(true);
 
-    let token;
-    try {
-      token = await recaptchaRef.current.executeAsync();
-      console.log("💡 reCAPTCHA token:", token); 
-      recaptchaRef.current.reset();
-    } catch (err) {
-      console.error("reCAPTCHA execution failed:", err);
-      setStatus("ERROR");
-      setIsLoading(false);
-      return;
-    }
+    recaptchaRef.current.execute();
+
+const onRecaptchaChange = async (token) => {
+  console.log("💡 reCAPTCHA token:", token);
+  recaptchaRef.current.reset();
+
 
     try {
       const response = await fetch(
@@ -123,8 +122,7 @@ export default function InlineEstimateForm({ onSuccess }) {
     }
   };
 
-  const siteKey = process.env.REACT_APP_RECAPTCHA_SITEKEY;
-  console.log("🔑 siteKey from INLINE form:", siteKey);
+
 
   return (
     <div className="page-wrapper">
@@ -210,3 +208,4 @@ export default function InlineEstimateForm({ onSuccess }) {
     </div>
   );
 }
+};
