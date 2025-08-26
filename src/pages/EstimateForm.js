@@ -71,6 +71,7 @@ export default function EstimateForm() {
     let token;
     try {
       token = await recaptchaRef.current.executeAsync();
+      console.log("💡 reCAPTCHA token:", token); 
       recaptchaRef.current.reset();
     } catch (err) {
       console.error("reCAPTCHA execution failed:", err);
@@ -85,7 +86,7 @@ export default function EstimateForm() {
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ ...formData, recaptchaToken: token }),
+          body: JSON.stringify({ ...formData, token }),
         }
       );
 
@@ -130,6 +131,7 @@ export default function EstimateForm() {
   };
 
   const siteKey = process.env.REACT_APP_RECAPTCHA_SITEKEY;
+  console.log("🔑 siteKey from estimate form :", siteKey);
 
   return (
     <div className="page-wrapper">
@@ -207,7 +209,7 @@ export default function EstimateForm() {
           )}
           {status === "ERROR" && (
             <p className="error">
-              Oops! Something went wrong. Please try again.
+              Oops! Something went wrong from estimate form . Please try again.
             </p>
           )}
         </section>

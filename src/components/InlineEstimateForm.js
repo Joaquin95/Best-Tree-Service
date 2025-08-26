@@ -56,6 +56,7 @@ export default function InlineEstimateForm({ onSuccess }) {
     }
 
     setIsLoading(true);
+
     let token;
     try {
       token = await recaptchaRef.current.executeAsync();
@@ -76,7 +77,7 @@ export default function InlineEstimateForm({ onSuccess }) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             ...formData,
-            recaptchaToken: token,
+           token,
           }),
         }
       );
@@ -123,6 +124,7 @@ export default function InlineEstimateForm({ onSuccess }) {
   };
 
   const siteKey = process.env.REACT_APP_RECAPTCHA_SITEKEY;
+  console.log("🔑 siteKey from INLINE form:", siteKey);
 
   return (
     <div className="page-wrapper">
@@ -200,7 +202,7 @@ export default function InlineEstimateForm({ onSuccess }) {
           )}
           {status === "ERROR" && (
             <p className="error">
-              Oops! Something went wrong. Please try again.
+              Oops! Something went wrong from Inline estimate. Please try again.
             </p>
           )}
         </section>
