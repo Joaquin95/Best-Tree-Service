@@ -1,9 +1,10 @@
 import React, { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import ReCAPTCHA from "react-google-recaptcha";
-import { getAnalytics, logEvent } from "firebase/analytics";
+import { logEvent } from "firebase/analytics";
+import { analytics } from "../firebase";
 
-export default function EstimateForm() {
+export default function EstimateForm({ onSuccess }) {
   const recaptchaRef = useRef(null);
   const navigate = useNavigate();
 
@@ -27,7 +28,6 @@ export default function EstimateForm() {
     if (digits.length !== 10) {
       errs.phone = "Enter a valid 10-digit phone number";
     }
-
     if (!formData.address.trim() || formData.address.length < 5)
       errs.address = "Enter a valid address";
     return errs;
@@ -42,9 +42,9 @@ export default function EstimateForm() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus("");
-    const errs = validateForm();
-    if (Object.keys(errs).length) {
-      setErrors(errs);
+    const validationErrors = validateForm();
+    if (Object.keys(validationErrors).length) {
+      setErrors(validationErrors);
       return;
     }
     if (isLoading) return;
@@ -52,11 +52,12 @@ export default function EstimateForm() {
     setIsLoading(true);
 
     try {
-      const analytics = getAnalytics();
-      logEvent(analytics, "form_submit", {
-        category: "lead_generation",
-        label: "EstimateForm",
-      });
+      if (analytics) {
+        logEvent(analytics, "form_submit", {
+          event_category: "lead_generation",
+          event_label: "EstimateForm",
+        });
+      }
     } catch (err) {
       console.warn("Analytics not initialized:", err);
     }
@@ -71,7 +72,7 @@ export default function EstimateForm() {
     let token;
     try {
       token = await recaptchaRef.current.executeAsync();
-      console.log("💡 reCAPTCHA token:", token); 
+      console.log("💡 reCAPTCHA token:", token);
       recaptchaRef.current.reset();
     } catch (err) {
       console.error("reCAPTCHA execution failed:", err);
@@ -104,7 +105,10 @@ export default function EstimateForm() {
           message: "",
         });
 
-        const goThankYou = () => navigate("/thank-you");
+        const goThankYou = () => {
+          onSuccess?.();
+          navigate("/thank-you");
+        };
 
         if (window.gtag) {
           window.gtag("event", "form_submit", {
@@ -121,9 +125,7 @@ export default function EstimateForm() {
         throw new Error(result.error || "Submission failed");
       }
     } catch (err) {
-      const safeError =
-        err instanceof Error ? err : new Error("Unknown submission error");
-      console.error("Submission error:", safeError.message);
+      console.error("Submission error:", err);
       setStatus("ERROR");
     } finally {
       setIsLoading(false);
