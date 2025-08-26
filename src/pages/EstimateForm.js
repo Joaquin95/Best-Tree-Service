@@ -8,9 +8,6 @@ export default function EstimateForm({ onSuccess }) {
   const recaptchaRef = useRef(null);
   const navigate = useNavigate();
 
-    const siteKey = process.env.REACT_APP_RECAPTCHA_SITEKEY;
-  console.log("🔑 siteKey from estimate form :", siteKey);
-  
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -54,7 +51,7 @@ export default function EstimateForm({ onSuccess }) {
 
     setIsLoading(true);
 
-    try {
+  try {
       if (analytics) {
         logEvent(analytics, "form_submit", {
           event_category: "lead_generation",
@@ -65,19 +62,25 @@ export default function EstimateForm({ onSuccess }) {
       console.warn("Analytics not initialized:", err);
     }
 
+
     if (!recaptchaRef.current) {
       console.error("reCAPTCHA not initialized");
       setStatus("ERROR");
       setIsLoading(false);
       return;
     }
-  recaptchaRef.current.execute();
-  };
 
-    const onRecaptchaChange = async (token) => {
-    console.log("💡 reCAPTCHA token:", token);
-    recaptchaRef.current.reset();
-
+    let token;
+    try {
+      token = await recaptchaRef.current.executeAsync();
+      console.log("💡 reCAPTCHA token:", token);
+      recaptchaRef.current.reset();
+    } catch (err) {
+      console.error("reCAPTCHA execution failed:", err);
+      setStatus("ERROR");
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const response = await fetch(
@@ -103,10 +106,11 @@ export default function EstimateForm({ onSuccess }) {
           message: "",
         });
 
-        const goThankYou = () => {
+           const goThankYou = () => {
           onSuccess?.();
           navigate("/thank-you");
         };
+
 
         if (window.gtag) {
           window.gtag("event", "form_submit", {
@@ -117,7 +121,7 @@ export default function EstimateForm({ onSuccess }) {
           });
           setTimeout(goThankYou, 3000);
         } else {
-          goThankYou();
+            goThankYou();
         }
       } else {
         throw new Error(result.error || "Submission failed");
@@ -131,6 +135,8 @@ export default function EstimateForm({ onSuccess }) {
   };
 
 
+  const siteKey = process.env.REACT_APP_RECAPTCHA_SITEKEY;
+  console.log("🔑 siteKey from estimate form :", siteKey);
 
   return (
     <div className="page-wrapper">
