@@ -1,46 +1,36 @@
-// functions/src/onFormSubmit.js
-import { onRequest }     from "firebase-functions/v2/https";
-import { defineSecret }  from "firebase-functions/params";
+import { onRequest } from "firebase-functions/v2/https";
+import { defineSecret } from "firebase-functions/params";
 import { initializeApp } from "firebase-admin/app";
-import fetch             from "node-fetch";
-import sgMail            from "@sendgrid/mail";
-import cors              from "cors";
+import fetch from "node-fetch";
+import sgMail from "@sendgrid/mail";
+import cors from "cors";
 
 initializeApp();
 
 const corsHandler = cors({
-  origin: [
-    "http://localhost:3000",
-    "https://best-tree-service.vercel.app"
-  ],
-  methods: ["POST", "OPTIONS"]
+  origin: ["http://localhost:3000", "https://best-tree-service.vercel.app"],
+  methods: ["POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type"],
 });
 
-// Secrets via new Secret Manager integration
-const SENDGRID_KEY  = defineSecret("SENDGRID_API_KEY");
+const SENDGRID_KEY = defineSecret("SENDGRID_API_KEY");
 const RECAPTCHA_KEY = defineSecret("RECAPTCHA_SECRET");
 
 export const onFormSubmit = onRequest(
   {
-    region:  "us-central1",
-    secrets: [SENDGRID_KEY, RECAPTCHA_KEY]
+    region: "us-central1",
+    secrets: [SENDGRID_KEY, RECAPTCHA_KEY],
   },
   async (req, res) => {
-    // Handle CORS preflight
+    // 1) Run CORS on every request to inject Access-Control-Allow-Origin, etc.
+    await new Promise((resolve, reject) =>
+      corsHandler(req, res, (err) => (err ? reject(err) : resolve()))
+    );
     if (req.method === "OPTIONS") {
-      res
-        .set("Access-Control-Allow-Methods", "POST")
-        .set("Access-Control-Allow-Headers", "Content-Type")
-        .set("Access-Control-Max-Age", "3600");
-      return res.status(204).send("");
+      return res.status(204).end();
     }
 
-    await new Promise((resolve, reject) =>
-      corsHandler(req, res, (err) => err ? reject(err) : resolve())
-    );
-
-    // Fetch your secret values
-    const sendgridApiKey  = SENDGRID_KEY.value();
+    const sendgridApiKey = SENDGRID_KEY.value();
     const recaptchaSecret = RECAPTCHA_KEY.value();
     if (!sendgridApiKey || !recaptchaSecret) {
       console.error("Missing secrets");
@@ -50,9 +40,9 @@ export const onFormSubmit = onRequest(
     try {
       // 1) Verify reCAPTCHA
       const verify = await fetch(
-        `https://www.google.com/recaptcha/api/siteverify`
-          + `?secret=${recaptchaSecret}`
-          + `&response=${req.body.recaptchaToken}`,
+        `https://www.google.com/recaptcha/api/siteverify` +
+          `?secret=${recaptchaSecret}` +
+          `&response=${req.body.recaptchaToken}`,
         { method: "POST" }
       );
       const vJson = await verify.json();
