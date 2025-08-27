@@ -42,6 +42,7 @@ export const onFormSubmit = onRequest(
     sgMail.setApiKey(sendgridApiKey);
 
     try {
+      console.log("📦 Writing to Firestore...");
       const submissionRef = await db.collection("submissions").add({
         name,
         email,
@@ -50,6 +51,7 @@ export const onFormSubmit = onRequest(
         message: message || null,
         createdAt:  FieldValue.serverTimestamp(),
       });
+  console.log("✅ Firestore write successful:", submissionRef.id);
 
       const ownerMsg = {
         to: "Joaquinmorales5613@gmail.com",
@@ -69,8 +71,10 @@ export const onFormSubmit = onRequest(
           2
         ),
       };
+  console.log("📨 Preparing email...");
 
       await sgMail.send(ownerMsg);
+  console.log("✅ Email sent");
 
        return res
         .status(200)
