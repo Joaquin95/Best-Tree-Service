@@ -46,8 +46,8 @@ console.log("📨 Sending email to:", smsGateway);
 try {
   await sgMail.send({
     to:      smsGateway,
-    from:    "Mintinvestments95@gmail.com",
-    subject: "New Estimate Request",
+    from:    "Joaquinmorales5613@gmail.com",
+    subject: "New Estimate Request J.M",
     text:    JSON.stringify(req.body, null, 2),
   });
   return res.status(200).json({ status: "success" });
