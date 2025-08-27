@@ -8,6 +8,8 @@ initializeApp();
 
 const db = getFirestore();
 
+console.log("GCLOUD_PROJECT:", process.env.GCLOUD_PROJECT);
+console.log("FIREBASE_CONFIG:", process.env.FIREBASE_CONFIG);
 
 const corsHandler = cors({
   origin: ["http://localhost:3000", "https://best-tree-service.vercel.app"],
@@ -76,6 +78,21 @@ export const onFormSubmit = onRequest(
     } catch (err) {
       console.error("🔥 onFormSubmit error:", err);
       return res.status(500).json({ error: "Internal Server Error" });
+    }
+  }
+);
+export const testWrite = onRequest(
+  { region: "us-central1" },
+  async (req, res) => {
+    try {
+      const ref = await db.collection("debug").add({
+        test: true,
+        ts: new Date(),
+      });
+      res.status(200).send(`OK: ${ref.id}`);
+    } catch (e) {
+      console.error("Test write failed:", e);
+      res.status(500).send(e.message);
     }
   }
 );
