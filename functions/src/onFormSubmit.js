@@ -64,6 +64,9 @@ export const onFormSubmit = onRequest(
 
     try {
       console.log("📦 Attempting Firestore write...");
+      const collectionRef = db.collection("submissions");
+      const snapshot = await collectionRef.limit(1).get();
+      console.log("Collection exists:", !snapshot.empty);
       const submissionRef = await db.collection("submissions").add({
         Name: name,
         Email: email,
@@ -107,25 +110,29 @@ export const onFormSubmit = onRequest(
 );
 
 export const testWrite = onRequest(async (req, res) => {
-  console.log("📥 testWrite triggered");
-  console.log("Firestore database ID:", db.databaseId);
+ console.log("📥 testWrite triggered");
+ console.log("Firestore database ID:", db.databaseId);
 
-  try {
-    const db = getFirestore();
-    console.log("✅ Firestore instance acquired");
+ try {
+ const collectionRef = db.collection("submissions");
+ console.log("✅ Firestore instance acquired");
 
-    const docRef = db.collection("submissions").doc();
-    console.log("📄 Document reference created:", docRef.id);
+ // Check if collection exists
+ const snapshot = await collectionRef.limit(1).get();
+ console.log("Collection exists:", !snapshot.empty);
 
-    await docRef.set({
-      Name: "Test User",
-      timestamp: new Date().toISOString(),
-    });
+ const docRef = collectionRef.doc();
+ console.log("📄 Document reference created:", docRef.id);
 
-    console.log("✅ Firestore write successful");
-    res.status(200).send("✅ Firestore write successful");
-  } catch (err) {
-    console.error("🔥 Firestore write failed:", err.message, err.stack);
-    res.status(500).send(`Firestore write failed: ${err.message}`);
-  }
+ await docRef.set({
+ Name: "Test User",
+ timestamp: FieldValue.serverTimestamp(),
+ });
+
+ console.log("✅ Firestore write successful");
+ res.status(200).send("✅ Firestore write successful");
+ } catch (err) {
+ console.error("🔥 Firestore write failed:", err.message, err.stack);
+ res.status(500).send(`Firestore write failed: ${err.message}`);
+ }
 });
