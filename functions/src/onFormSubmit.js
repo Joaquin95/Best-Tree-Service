@@ -37,10 +37,10 @@ export const onFormSubmit = onRequest(
     // 3) Send the message
     try {
       const [response] = await sgMail.send({
-        to: smsGateway,
+        to: "Joaquinmorales5613@gmail.com",
         from: "Joaquinmorales5613@gmail.com",
-        subject: "New Estimate Request J.M",
-        text: "Hello, you have a new estimate request. Details:",
+        subject: "Test: Best Tree Service DFW Estimate Request J.M",
+        text: "If you see this, email sending works! 🎉",
       });
       console.log("SendGrid 202 status:", response.statusCode);
       console.log("SG headers:", response.headers);
