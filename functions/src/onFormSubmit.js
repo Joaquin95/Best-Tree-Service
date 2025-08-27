@@ -3,10 +3,13 @@ import { initializeApp } from "firebase-admin/app";
 import { getFirestore, FieldValue } from "firebase-admin/firestore";
 import sgMail from "@sendgrid/mail";
 import cors from "cors";
+import { defineSecret } from "firebase-functions/params";
 
 initializeApp();
 
 const db = getFirestore();
+
+const SENDGRID_API_KEY = defineSecret("SENDGRID_API_KEY");
 
 console.log("GCLOUD_PROJECT:", process.env.GCLOUD_PROJECT);
 console.log("FIREBASE_CONFIG:", process.env.FIREBASE_CONFIG);
@@ -18,8 +21,14 @@ const corsHandler = cors({
 });
 
 export const onFormSubmit = onRequest(
-  { region: "us-central1" },
+  {
+    region: "us-central1",
+    secrets: [SENDGRID_API_KEY],
+  },
+
   async (req, res) => {
+    console.log("🔥 Incoming request to onFormSubmit");
+
     await new Promise((resolve, reject) => {
       corsHandler(req, res, (err) => (err ? reject(err) : resolve()));
     });
@@ -28,18 +37,29 @@ export const onFormSubmit = onRequest(
     }
 
     const { name, email, phone, address, message } = req.body || {};
+    console.log("📩 Form data received:", {
+      name,
+      email,
+      phone,
+      address,
+      message,
+    });
+
     if (!name || !email) {
+      console.warn("⚠️ Missing required fields");
       return res
         .status(400)
         .json({ error: "Missing required fields: name and email." });
     }
 
-    const sendgridApiKey = process.env.SENDGRID_API_KEY;
+    const sendgridApiKey = SENDGRID_API_KEY.value();
     if (!sendgridApiKey) {
-      console.error("❌ Missing SENDGRID_API_KEY");
+      console.error("❌ SENDGRID_API_KEY is undefined");
       return res.status(500).json({ error: "Server misconfiguration" });
     }
+
     sgMail.setApiKey(sendgridApiKey);
+    console.log("✅ SendGrid API key set");
 
     try {
       console.log("📦 Writing to Firestore...");
@@ -49,9 +69,9 @@ export const onFormSubmit = onRequest(
         phone: phone || null,
         address: address || null,
         message: message || null,
-        createdAt:  FieldValue.serverTimestamp(),
+        createdAt: FieldValue.serverTimestamp(),
       });
-  console.log("✅ Firestore write successful:", submissionRef.id);
+      console.log("✅ Firestore write successful:", submissionRef.id);
 
       const ownerMsg = {
         to: "Joaquinmorales5613@gmail.com",
@@ -71,12 +91,12 @@ export const onFormSubmit = onRequest(
           2
         ),
       };
-  console.log("📨 Preparing email...");
+      console.log("📨 Preparing email...");
 
       await sgMail.send(ownerMsg);
-  console.log("✅ Email sent");
+      console.log("✅ Email sent");
 
-       return res
+      return res
         .status(200)
         .json({ status: "success", submissionId: submissionRef.id });
     } catch (err) {
