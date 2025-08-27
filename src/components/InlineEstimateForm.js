@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "../firebase";
+
 export default function InlineEstimateForm({ onSuccess }) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({

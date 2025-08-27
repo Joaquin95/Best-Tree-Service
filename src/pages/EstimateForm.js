@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { logEvent } from "firebase/analytics";
 import { analytics } from "../firebase";
 
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { db } from "../firebase";
+
 export default function EstimateForm({ onSuccess }) {
   const navigate = useNavigate();
 
@@ -61,24 +64,12 @@ export default function EstimateForm({ onSuccess }) {
     }
 
     try {
-      const response = await fetch(
-        "https://us-central1-best-tree-service-a1029.cloudfunctions.net/onFormSubmit",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        }
-      );
-      const result = await response.json();
-      if (!response.ok) {
-        throw new Error(result.error || "Server returned an error");
-      }
+      const docRef = await addDoc(collection(db, "estimates"), {
+        ...formData,
+        createdAt: serverTimestamp(),
+      });
+      console.log("Firestore doc ID:", docRef.id);
 
-      if (result.status !== "success") {
-        throw new Error(result.error || "Submission failed");
-      }
-
-      console.log("Function result:", result);
       setStatus("SUCCESS");
 
       setFormData({
