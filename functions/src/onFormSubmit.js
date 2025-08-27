@@ -5,6 +5,7 @@ import sgMail from "@sendgrid/mail";
 import cors from "cors";
 
 initializeApp();
+
 const db = getFirestore();
 
 const corsHandler = cors({
@@ -74,7 +75,7 @@ try {
 
 
       await sgMail.send(ownerMsg);
-      
+
       return res.status(200).json({
         status: "success",
         submissionId: submissionRef.id,
