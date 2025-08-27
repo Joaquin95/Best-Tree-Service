@@ -4,12 +4,7 @@ import { getFirestore, FieldValue } from "firebase-admin/firestore";
 import sgMail from "@sendgrid/mail";
 import cors from "cors";
 
-initializeApp({
-  projectId: process.env.GCLOUD_PROJECT || "best-tree-service-a1029",
-});
-
-
-
+initializeApp();
 
 const db = getFirestore();
 
