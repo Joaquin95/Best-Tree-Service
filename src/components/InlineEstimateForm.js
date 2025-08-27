@@ -1,9 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "../firebase";
-
 export default function InlineEstimateForm({ onSuccess }) {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
@@ -17,16 +14,9 @@ export default function InlineEstimateForm({ onSuccess }) {
   const [status, setStatus] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((f) => ({ ...f, [name]: value }));
-    setErrors((errs) => ({ ...errs, [name]: "" }));
-  };
-
   const validateForm = () => {
     const errs = {};
     const digits = formData.phone.replace(/\D/g, "");
-
     if (!formData.name.trim()) errs.name = "Name is required";
     if (!/\S+@\S+\.\S+/.test(formData.email)) errs.email = "Invalid email";
     if (digits.length !== 10) {
@@ -35,6 +25,12 @@ export default function InlineEstimateForm({ onSuccess }) {
     if (!formData.address.trim() || formData.address.length < 5)
       errs.address = "Enter a valid address";
     return errs;
+  };
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((f) => ({ ...f, [name]: value }));
+    setErrors((errs) => ({ ...errs, [name]: "" }));
   };
 
   const handleSubmit = async (e) => {
@@ -53,11 +49,19 @@ export default function InlineEstimateForm({ onSuccess }) {
     setIsLoading(true);
 
     try {
-      const docRef = await addDoc(collection(db, "estimates"), {
-        ...formData,
-        createdAt: serverTimestamp(),
-      });
-      console.log("Firestore doc ID:", docRef.id);
+      const res = await fetch(
+        "https://us-central1-best-tree-service-a1029.cloudfunctions.net/onFormSubmit",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`${res.status} – ${text}`);
+      }
 
       setStatus("SUCCESS");
 

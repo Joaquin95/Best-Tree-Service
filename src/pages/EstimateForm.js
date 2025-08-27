@@ -3,9 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { logEvent } from "firebase/analytics";
 import { analytics } from "../firebase";
 
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { db } from "../firebase";
-
 export default function EstimateForm({ onSuccess }) {
   const navigate = useNavigate();
 
@@ -23,7 +20,6 @@ export default function EstimateForm({ onSuccess }) {
   const validateForm = () => {
     const errs = {};
     const digits = formData.phone.replace(/\D/g, "");
-
     if (!formData.name.trim()) errs.name = "Name is required";
     if (!/\S+@\S+\.\S+/.test(formData.email)) errs.email = "Invalid email";
     if (digits.length !== 10) {
@@ -64,11 +60,19 @@ export default function EstimateForm({ onSuccess }) {
     }
 
     try {
-      const docRef = await addDoc(collection(db, "estimates"), {
-        ...formData,
-        createdAt: serverTimestamp(),
-      });
-      console.log("Firestore doc ID:", docRef.id);
+      const res = await fetch(
+        "https://us-central1-best-tree-service-a1029.cloudfunctions.net/onFormSubmit",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      if (!res.ok) {
+        const text = await res.text();
+        throw new Error(`${res.status} – ${text}`);
+      }
 
       setStatus("SUCCESS");
 
