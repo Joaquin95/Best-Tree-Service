@@ -4,9 +4,15 @@ import { getFirestore, FieldValue } from "firebase-admin/firestore";
 import sgMail from "@sendgrid/mail";
 import cors from "cors";
 
-initializeApp();
+initializeApp({
+  projectId: process.env.GCLOUD_PROJECT || "best-tree-service-a1029",
+});
+
+
+
 
 const db = getFirestore();
+
 
 const corsHandler = cors({
   origin: ["http://localhost:3000", "https://best-tree-service.vercel.app"],
@@ -39,13 +45,13 @@ export const onFormSubmit = onRequest(
     sgMail.setApiKey(sendgridApiKey);
 
     try {
-      const docRef = await db.collection("estimates").add({
+      const submissionRef = await db.collection("submissions").add({
         name,
         email,
         phone: phone || null,
         address: address || null,
         message: message || null,
-        createdAt: FieldValue.serverTimestamp(),
+        createdAt:  FieldValue.serverTimestamp(),
       });
 
       const ownerMsg = {
@@ -54,7 +60,7 @@ export const onFormSubmit = onRequest(
         subject: `New Estimate Request from ${name}`,
         text: JSON.stringify(
           {
-            id: docRef.id,
+            id: submissionRef.id,
             name,
             email,
             phone,
@@ -69,9 +75,9 @@ export const onFormSubmit = onRequest(
 
       await sgMail.send(ownerMsg);
 
-      return res
+       return res
         .status(200)
-        .json({ status: "success", submissionId: docRef.id });
+        .json({ status: "success", submissionId: submissionRef.id });
     } catch (err) {
       console.error("🔥 onFormSubmit error:", err);
       return res.status(500).json({ error: "Internal Server Error" });
