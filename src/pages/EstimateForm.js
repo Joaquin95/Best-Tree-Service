@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { logEvent } from "firebase/analytics";
 import { analytics } from "../firebase";
@@ -70,37 +70,40 @@ export default function EstimateForm({ onSuccess }) {
         }
       );
       const result = await response.json();
+      if (!response.ok) {
+        throw new Error(result.error || "Server returned an error");
+      }
 
-      if (response.ok && result.status === "success") {
-        console.log("Function result:", result);
-        setStatus("SUCCESS");
-
-        setFormData({
-          name: "",
-          email: "",
-          phone: "",
-          address: "",
-          message: "",
-        });
-
-        const goThankYou = () => {
-          onSuccess?.();
-          navigate("/thank-you");
-        };
-
-        if (window.gtag) {
-          window.gtag("event", "form_submit", {
-            event_category: "lead_generation",
-            event_label: `EstimateForm – ${window.location.pathname}`,
-            value: 1,
-            event_callback: goThankYou,
-          });
-          setTimeout(goThankYou, 3000);
-        } else {
-          goThankYou();
-        }
-      } else {
+      if (result.status !== "success") {
         throw new Error(result.error || "Submission failed");
+      }
+
+      console.log("Function result:", result);
+      setStatus("SUCCESS");
+
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        address: "",
+        message: "",
+      });
+
+      const goThankYou = () => {
+        onSuccess?.();
+        navigate("/thank-you");
+      };
+
+      if (window.gtag) {
+        window.gtag("event", "form_submit", {
+          event_category: "lead_generation",
+          event_label: `EstimateForm – ${window.location.pathname}`,
+          value: 1,
+          event_callback: goThankYou,
+        });
+        setTimeout(goThankYou, 3000);
+      } else {
+        goThankYou();
       }
     } catch (err) {
       console.error("Submission error:", err);
