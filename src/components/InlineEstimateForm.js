@@ -53,26 +53,12 @@ export default function InlineEstimateForm({ onSuccess }) {
     setIsLoading(true);
 
     try {
-      const response = await fetch(
-        "https://us-central1-best-tree-service-a1029.cloudfunctions.net/onFormSubmit",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        }
-      );
+      const docRef = await addDoc(collection(db, "estimates"), {
+        ...formData,
+        createdAt: serverTimestamp(),
+      });
+      console.log("Firestore doc ID:", docRef.id);
 
-      const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error(result.error || "Server returned an error");
-      }
-
-      if (result.status !== "success") {
-        throw new Error(result.error || "Submission failed");
-      }
-
-      console.log("Function result:", result);
       setStatus("SUCCESS");
 
       setFormData({
