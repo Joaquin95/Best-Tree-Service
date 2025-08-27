@@ -1,0 +1,44 @@
+[debug] [2025-08-27T21:46:20.423Z] ----------------------------------------------------------------------
+[debug] [2025-08-27T21:46:20.426Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\joaqu\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js functions:delete onFormSubmit --region us-central1
+[debug] [2025-08-27T21:46:20.426Z] CLI Version:   14.14.0
+[debug] [2025-08-27T21:46:20.426Z] Platform:      win32
+[debug] [2025-08-27T21:46:20.426Z] Node Version:  v20.17.0
+[debug] [2025-08-27T21:46:20.427Z] Time:          Wed Aug 27 2025 16:46:20 GMT-0500 (Central Daylight Time)
+[debug] [2025-08-27T21:46:20.427Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2025-08-27T21:46:20.622Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2025-08-27T21:46:20.623Z] > authorizing via signed-in user (mintinvestments95@gmail.com)
+[debug] [2025-08-27T21:46:20.623Z] [iam] checking project best-tree-service-a1029 for permissions ["cloudfunctions.functions.delete","cloudfunctions.functions.list","firebase.projects.get"]
+[debug] [2025-08-27T21:46:20.624Z] Checked if tokens are valid: true, expires at: 1756332552798
+[debug] [2025-08-27T21:46:20.624Z] Checked if tokens are valid: true, expires at: 1756332552798
+[debug] [2025-08-27T21:46:20.625Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/best-tree-service-a1029:testIamPermissions [none]
+[debug] [2025-08-27T21:46:20.626Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/best-tree-service-a1029:testIamPermissions x-goog-quota-user=projects/best-tree-service-a1029
+[debug] [2025-08-27T21:46:20.626Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/best-tree-service-a1029:testIamPermissions {"permissions":["cloudfunctions.functions.delete","cloudfunctions.functions.list","firebase.projects.get"]}
+[debug] [2025-08-27T21:46:20.953Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/best-tree-service-a1029:testIamPermissions 200
+[debug] [2025-08-27T21:46:20.953Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/best-tree-service-a1029:testIamPermissions {"permissions":["cloudfunctions.functions.delete","cloudfunctions.functions.list","firebase.projects.get"]}
+[debug] [2025-08-27T21:46:20.954Z] Checked if tokens are valid: true, expires at: 1756332552798
+[debug] [2025-08-27T21:46:20.954Z] Checked if tokens are valid: true, expires at: 1756332552798
+[debug] [2025-08-27T21:46:20.954Z] Checked if tokens are valid: true, expires at: 1756332552798
+[debug] [2025-08-27T21:46:20.954Z] Checked if tokens are valid: true, expires at: 1756332552798
+[debug] [2025-08-27T21:46:20.954Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/best-tree-service-a1029/adminSdkConfig [none]
+[debug] [2025-08-27T21:46:20.956Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v1/projects/best-tree-service-a1029/locations/-/functions [none]
+[debug] [2025-08-27T21:46:21.186Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects/best-tree-service-a1029/adminSdkConfig 200
+[debug] [2025-08-27T21:46:21.186Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects/best-tree-service-a1029/adminSdkConfig {"projectId":"best-tree-service-a1029","storageBucket":"best-tree-service-a1029.firebasestorage.app"}
+[debug] [2025-08-27T21:46:21.489Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v1/projects/best-tree-service-a1029/locations/-/functions 200
+[debug] [2025-08-27T21:46:21.489Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v1/projects/best-tree-service-a1029/locations/-/functions {}
+[debug] [2025-08-27T21:46:21.489Z] Checked if tokens are valid: true, expires at: 1756332552798
+[debug] [2025-08-27T21:46:21.489Z] Checked if tokens are valid: true, expires at: 1756332552798
+[debug] [2025-08-27T21:46:21.491Z] >>> [apiv2][query] GET https://cloudfunctions.googleapis.com/v2/projects/best-tree-service-a1029/locations/-/functions filter=environment%3D%22GEN_2%22
+[debug] [2025-08-27T21:46:21.828Z] <<< [apiv2][status] GET https://cloudfunctions.googleapis.com/v2/projects/best-tree-service-a1029/locations/-/functions 200
+[debug] [2025-08-27T21:46:21.829Z] <<< [apiv2][body] GET https://cloudfunctions.googleapis.com/v2/projects/best-tree-service-a1029/locations/-/functions {}
+[debug] [2025-08-27T21:46:21.984Z] TypeError: Cannot convert undefined or null to object
+    at Function.values (<anonymous>)
+    at C:\Users\joaqu\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\functions\backend.js:261:37
+    at Array.reduce (<anonymous>)
+    at allEndpoints (C:\Users\joaqu\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\functions\backend.js:260:45)
+    at Object.matchingBackend (C:\Users\joaqu\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\functions\backend.js:284:28)
+    at Object.createDeploymentPlan (C:\Users\joaqu\AppData\Roaming\npm\node_modules\firebase-tools\lib\deploy\functions\release\planner.js:78:27)
+    at Command.actionFn (C:\Users\joaqu\AppData\Roaming\npm\node_modules\firebase-tools\lib\commands\functions-delete.js:43:26)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+[error] 
+[error] Error: An unexpected error has occurred.

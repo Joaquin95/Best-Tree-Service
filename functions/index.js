@@ -1,4 +1,4 @@
-import { onFormSubmit } from "./src/onFormSubmit.js";
+import { onFormSubmit , testWrite } from "./src/onFormSubmit.js";
 
 
-export { onFormSubmit };
+export { onFormSubmit, testWrite };

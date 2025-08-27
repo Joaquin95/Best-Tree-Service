@@ -62,62 +62,61 @@ export const onFormSubmit = onRequest(
     console.log("✅ SendGrid API key set");
 
     try {
-  console.log("📦 Attempting Firestore write...");
-  const submissionRef = await db.collection("submissions").add({
-    name,
-    email,
-    phone: phone || null,
-    address: address || null,
-    message: message || null,
-    createdAt: FieldValue.serverTimestamp(),
-  });
-  console.log("✅ Firestore write successful:", submissionRef.id);
-
-  const ownerMsg = {
-    to: "Joaquinmorales5613@gmail.com",
-    from: "Joaquinmorales5613@gmail.com",
-    subject: `New Estimate Request from ${name}`,
-    text: JSON.stringify(
-      {
-        id: submissionRef.id,
+      console.log("📦 Attempting Firestore write...");
+      const submissionRef = await db.collection("submissions").add({
         name,
         email,
-        phone,
-        address,
-        message,
-        receivedAt: new Date().toISOString(),
-      },
-      null,
-      2
-    ),
-  };
-  console.log("📨 Preparing email...");
+        phone: phone || null,
+        address: address || null,
+        message: message || null,
+        createdAt: FieldValue.serverTimestamp(),
+      });
+      console.log("✅ Firestore write successful:", submissionRef.id);
 
-  await sgMail.send(ownerMsg);
-  console.log("✅ Email sent");
+      const ownerMsg = {
+        to: "Joaquinmorales5613@gmail.com",
+        from: "Joaquinmorales5613@gmail.com",
+        subject: `New Estimate Request from ${name}`,
+        text: JSON.stringify(
+          {
+            id: submissionRef.id,
+            name,
+            email,
+            phone,
+            address,
+            message,
+            receivedAt: new Date().toISOString(),
+          },
+          null,
+          2
+        ),
+      };
+      console.log("📨 Preparing email...");
 
-  return res
-    .status(200)
-    .json({ status: "success", submissionId: submissionRef.id });
-} catch (err) {
-  console.error("🔥 onFormSubmit error:", err);
-  return res.status(500).json({ error: "Internal Server Error" });
-}
+      await sgMail.send(ownerMsg);
+      console.log("✅ Email sent");
+
+      return res
+        .status(200)
+        .json({ status: "success", submissionId: submissionRef.id });
+    } catch (err) {
+      console.error("🔥 onFormSubmit error:", err);
+      return res.status(500).json({ error: "Internal Server Error" });
+    }
   }
 );
 
-// export const testWrite = onRequest(
-//   { region: "us-central1" },
-//   async (req, res) => {
-//     try {
-//       const ref = await db.collection("debug").add({
-//         test: true,
-//         ts: new Date(),
-//       });
-//       res.status(200).send(`OK: ${ref.id}`);
-//     } catch (e) {
-//       console.error("Test write failed:", e);
-//       res.status(500).send(e.message);
-//     }
-//   }
-// );
+export const testWrite = onRequest(async (req, res) => {
+
+  try {
+    const db = getFirestore();
+    await db.collection("submissions").add({
+      name: "Test User",
+      timestamp: new Date().toISOString(),
+    });
+    res.status(200).send("✅ Firestore write successful");
+  } catch (err) {
+    console.error("🔥 Firestore write failed:", err);
+    res.status(500).send("❌ Firestore write failed");
+  }
+});
