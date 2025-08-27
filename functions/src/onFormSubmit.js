@@ -5,7 +5,10 @@ import sgMail from "@sendgrid/mail";
 import cors from "cors";
 import { defineSecret } from "firebase-functions/params";
 
-initializeApp();
+initializeApp({
+  projectId: "best-tree-service-a1029",
+});
+
 
 const db = getFirestore();
 
