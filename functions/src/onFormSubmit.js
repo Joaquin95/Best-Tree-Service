@@ -16,7 +16,7 @@ const corsHandler = cors({
 export const onFormSubmit = onRequest(
   { region: "us-central1" },
   async (req, res) => {
-    // CORS preflight
+
     await new Promise((resolve, reject) => {
       corsHandler(req, res, (err) => {
         if (err) return reject(err);
@@ -28,15 +28,22 @@ export const onFormSubmit = onRequest(
       return res.status(204).end();
     }
 
-    // Parse & validate payload
+
     const { name, email, phone, address, message } = req.body || {};
     if (!name || !email) {
       return res
         .status(400)
         .json({ error: "Missing required fields: name and email." });
     }
+ 
+    const sendgridApiKey = process.env.SENDGRID_API_KEY;
+    if (!sendgridApiKey) {
+      console.error("❌ Missing SENDGRID_API_KEY");
+      return res.status(500).json({ error: "Server misconfiguration" });
+    }
+    sgMail.setApiKey(sendgridApiKey);
 
-    // Persist to Firestore
+try {
     const submissionRef = await db.collection("submissions").add({
       name,
       email,
@@ -45,14 +52,6 @@ export const onFormSubmit = onRequest(
       message: message || null,
       createdAt: FieldValue.serverTimestamp(),
     });
-
-    // Ensure SendGrid key exists
-    const sendgridApiKey = process.env.SENDGRID_API_KEY;
-    if (!sendgridApiKey) {
-      console.error("❌ Missing SENDGRID_API_KEY");
-      return res.status(500).json({ error: "Server misconfiguration" });
-    }
-    sgMail.setApiKey(sendgridApiKey);
 
     const ownerMsg = {
       to: "Joaquinmorales5613@gmail.com",
@@ -73,8 +72,9 @@ export const onFormSubmit = onRequest(
       ),
     };
 
-    try {
+
       await sgMail.send(ownerMsg);
+      
       return res.status(200).json({
         status: "success",
         submissionId: submissionRef.id,
