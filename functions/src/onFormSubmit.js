@@ -107,16 +107,25 @@ export const onFormSubmit = onRequest(
 );
 
 export const testWrite = onRequest(async (req, res) => {
+  console.log("📥 testWrite triggered");
 
   try {
     const db = getFirestore();
-    await db.collection("submissions").add({
+    console.log("✅ Firestore instance acquired");
+
+    const docRef = db.collection("submissions").doc();
+    console.log("📄 Document reference created:", docRef.id);
+
+    await docRef.set({
       name: "Test User",
       timestamp: new Date().toISOString(),
     });
+
+    console.log("✅ Firestore write successful");
     res.status(200).send("✅ Firestore write successful");
   } catch (err) {
-    console.error("🔥 Firestore write failed:", err);
+    console.error("🔥 Firestore write failed:", err.message);
+    console.error("🧵 Stack trace:", err.stack);
     res.status(500).send("❌ Firestore write failed");
   }
 });
