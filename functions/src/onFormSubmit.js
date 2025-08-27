@@ -14,7 +14,8 @@ const db = getFirestore();
 
 const SENDGRID_API_KEY = defineSecret("SENDGRID_API_KEY");
 
-console.log("GCLOUD_PROJECT:", process.env.GCLOUD_PROJECT);
+
+console.log("Project ID:", process.env.GCLOUD_PROJECT);
 console.log("FIREBASE_CONFIG:", process.env.FIREBASE_CONFIG);
 
 const corsHandler = cors({
@@ -99,12 +100,12 @@ export const onFormSubmit = onRequest(
       await sgMail.send(ownerMsg);
       console.log("✅ Email sent");
 
-      return res
+  return res
         .status(200)
         .json({ status: "success", submissionId: submissionRef.id });
     } catch (err) {
-      console.error("🔥 onFormSubmit error:", err);
-      return res.status(500).json({ error: "Internal Server Error" });
+      console.error("🔥 onFormSubmit error:", err.message, err.stack);
+      return res.status(500).json({ error: `Firestore error: ${err.message}` });
     }
   }
 );
