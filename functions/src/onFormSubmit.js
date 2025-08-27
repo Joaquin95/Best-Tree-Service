@@ -9,11 +9,9 @@ initializeApp({
   projectId: "best-tree-service-a1029",
 });
 
-
 const db = getFirestore();
 
 const SENDGRID_API_KEY = defineSecret("SENDGRID_API_KEY");
-
 
 console.log("Project ID:", process.env.GCLOUD_PROJECT);
 console.log("FIREBASE_CONFIG:", process.env.FIREBASE_CONFIG);
@@ -68,11 +66,11 @@ export const onFormSubmit = onRequest(
     try {
       console.log("📦 Attempting Firestore write...");
       const submissionRef = await db.collection("submissions").add({
-        name,
-        email,
-        phone: phone || null,
-        address: address || null,
-        message: message || null,
+        Name: name, // Match Firestore field names
+        Email: email,
+        "Phone Number": phone || null,
+        Address: address || null,
+        Message: message || null,
         createdAt: FieldValue.serverTimestamp(),
       });
       console.log("✅ Firestore write successful:", submissionRef.id);
@@ -100,7 +98,7 @@ export const onFormSubmit = onRequest(
       await sgMail.send(ownerMsg);
       console.log("✅ Email sent");
 
-  return res
+      return res
         .status(200)
         .json({ status: "success", submissionId: submissionRef.id });
     } catch (err) {
