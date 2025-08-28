@@ -1,5 +1,8 @@
 {
   "projects": {
-    "default": "best-tree-service-a1029"
-  }
+    "default": "best-tree-service-a1029",
+    "live": "best-tree-service-a1029"
+  },
+  "targets": {},
+  "etags": {}
 }
