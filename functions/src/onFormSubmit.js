@@ -4,6 +4,7 @@ import { getFirestore, FieldValue } from "firebase-admin/firestore";
 import sgMail from "@sendgrid/mail";
 import cors from "cors";
 import { defineSecret } from "firebase-functions/params";
+import firebaseAdmin from "firebase-admin";
 
 // Initialize Firebase Admin SDK
 initializeApp({
@@ -15,6 +16,7 @@ const db = getFirestore();
 const SENDGRID_API_KEY = defineSecret("SENDGRID_API_KEY");
 
 console.log("Project ID initialized:", process.env.GCLOUD_PROJECT);
+console.log("Firebase Admin SDK version:", firebaseAdmin.SDK_VERSION);
 console.log("Firestore database ID:", db.databaseId || "(default)");
 
 const corsHandler = cors({
@@ -66,14 +68,13 @@ export const onFormSubmit = onRequest(
 
     try {
       console.log("📦 Attempting Firestore write to submissions collection...");
+      console.log("Firestore path:", db.collection("submissions").path);
 
-      // Check if collection exists
-      const collectionRef = db.collection("submissions");
-      const snapshot = await collectionRef.limit(1).get();
-      console.log("Collection exists:", !snapshot.empty, "Path:", collectionRef.path);
+      // Minimal write to test
+      const docRef = db.collection("submissions").doc();
+      console.log("📄 Document reference created:", docRef.id);
 
-      // Use add instead of set to test
-      const submissionRef = await collectionRef.add({
+      await docRef.set({
         Name: name || "Unknown",
         Email: email || "Unknown",
         "Phone Number": phone || null,
@@ -81,7 +82,7 @@ export const onFormSubmit = onRequest(
         Message: message || null,
         createdAt: FieldValue.serverTimestamp(),
       });
-      console.log("✅ Firestore write successful:", submissionRef.id);
+      console.log("✅ Firestore write successful:", docRef.id);
 
       const ownerMsg = {
         to: "Joaquinmorales5613@gmail.com",
@@ -89,7 +90,7 @@ export const onFormSubmit = onRequest(
         subject: `New Estimate Request from ${name}`,
         text: JSON.stringify(
           {
-            id: submissionRef.id,
+            id: docRef.id,
             name,
             email,
             phone,
@@ -107,7 +108,7 @@ export const onFormSubmit = onRequest(
 
       return res
         .status(200)
-        .json({ status: "success", submissionId: submissionRef.id });
+        .json({ status: "success", submissionId: docRef.id });
     } catch (err) {
       console.error("🔥 onFormSubmit error:", err.message, err.stack);
       return res.status(500).json({ error: `Firestore error: ${err.message}` });
@@ -118,15 +119,16 @@ export const onFormSubmit = onRequest(
 export const testWrite = onRequest(async (req, res) => {
   console.log("📥 testWrite triggered");
   console.log("Firestore database ID:", db.databaseId || "(default)");
+  console.log("Firebase Admin SDK version:", firebaseAdmin.SDK_VERSION);
 
   try {
     console.log("✅ Firestore instance acquired");
+    console.log("Firestore path:", db.collection("submissions").path);
 
-    const collectionRef = db.collection("submissions");
-    const snapshot = await collectionRef.limit(1).get();
-    console.log("Collection exists:", !snapshot.empty, "Path:", collectionRef.path);
+    const docRef = db.collection("submissions").doc();
+    console.log("📄 Document reference created:", docRef.id);
 
-    const docRef = await collectionRef.add({
+    await docRef.set({
       Name: "Test User",
       timestamp: FieldValue.serverTimestamp(),
     });
