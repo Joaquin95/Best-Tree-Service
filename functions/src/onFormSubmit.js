@@ -10,7 +10,6 @@ initializeApp({
   projectId: "best-tree-service-a1029",
 });
 
-// Use default database (remove databaseId if SDK version is older)
 const db = getFirestore();
 
 const SENDGRID_API_KEY = defineSecret("SENDGRID_API_KEY");
@@ -68,11 +67,13 @@ export const onFormSubmit = onRequest(
     try {
       console.log("📦 Attempting Firestore write to submissions collection...");
 
-      // Simplified write
-      const docRef = db.collection("submissions").doc();
-      console.log("📄 Document reference created:", docRef.id);
+      // Check if collection exists
+      const collectionRef = db.collection("submissions");
+      const snapshot = await collectionRef.limit(1).get();
+      console.log("Collection exists:", !snapshot.empty, "Path:", collectionRef.path);
 
-      await docRef.set({
+      // Use add instead of set to test
+      const submissionRef = await collectionRef.add({
         Name: name || "Unknown",
         Email: email || "Unknown",
         "Phone Number": phone || null,
@@ -80,7 +81,7 @@ export const onFormSubmit = onRequest(
         Message: message || null,
         createdAt: FieldValue.serverTimestamp(),
       });
-      console.log("✅ Firestore write successful:", docRef.id);
+      console.log("✅ Firestore write successful:", submissionRef.id);
 
       const ownerMsg = {
         to: "Joaquinmorales5613@gmail.com",
@@ -88,7 +89,7 @@ export const onFormSubmit = onRequest(
         subject: `New Estimate Request from ${name}`,
         text: JSON.stringify(
           {
-            id: docRef.id,
+            id: submissionRef.id,
             name,
             email,
             phone,
@@ -106,7 +107,7 @@ export const onFormSubmit = onRequest(
 
       return res
         .status(200)
-        .json({ status: "success", submissionId: docRef.id });
+        .json({ status: "success", submissionId: submissionRef.id });
     } catch (err) {
       console.error("🔥 onFormSubmit error:", err.message, err.stack);
       return res.status(500).json({ error: `Firestore error: ${err.message}` });
@@ -121,16 +122,16 @@ export const testWrite = onRequest(async (req, res) => {
   try {
     console.log("✅ Firestore instance acquired");
 
-    // Simplified write
-    const docRef = db.collection("submissions").doc();
-    console.log("📄 Document reference created:", docRef.id);
+    const collectionRef = db.collection("submissions");
+    const snapshot = await collectionRef.limit(1).get();
+    console.log("Collection exists:", !snapshot.empty, "Path:", collectionRef.path);
 
-    await docRef.set({
+    const docRef = await collectionRef.add({
       Name: "Test User",
       timestamp: FieldValue.serverTimestamp(),
     });
 
-    console.log("✅ Firestore write successful");
+    console.log("✅ Firestore write successful:", docRef.id);
     res.status(200).send("✅ Firestore write successful");
   } catch (err) {
     console.error("🔥 Firestore write failed:", err.message, err.stack);
